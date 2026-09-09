@@ -1,0 +1,37 @@
+<div class="shell">
+  <mat-toolbar class="toolbar">
+    <div class="brand">
+      <div class="brand-mark">ST</div>
+      <div class="brand-text">
+        <span class="title">Seguimiento TI</span>
+        <span class="eyebrow">Requerimientos e incidencias · Precotex</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      @for (op of opciones; track op.ruta) {
+        <a class="nav-item" [routerLink]="op.ruta" routerLinkActive="active" [matTooltip]="op.etiqueta">
+          <mat-icon>{{ op.icono }}</mat-icon>
+          <span class="nav-item-label">{{ op.etiqueta }}</span>
+        </a>
+      }
+    </nav>
+
+    <span class="spacer"></span>
+
+    <button mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_circle</mat-icon>
+      <span class="user-label">{{ nomUsuario }}</span>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="cerrarSesion()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

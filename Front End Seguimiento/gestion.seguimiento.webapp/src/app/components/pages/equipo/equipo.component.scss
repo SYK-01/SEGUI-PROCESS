@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  color: var(--text);
+}
+
+.equipo-add {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  max-width: 460px;
+}
+
+.equipo-add .full { flex: 1; }
+
+.equipo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 460px;
+}
+
+.equipo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.nombre {
+  font-size: 13px;
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edit-input {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  padding: 6px 8px;
+  outline: none;
+}
+.edit-input:focus { border-color: var(--accent); }
+
+.cnt {
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-right: 12px;
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--text-mute);
+  padding: 12px 0;
+}
+
+@media (max-width: 480px) {
+  .equipo-add { flex-direction: column; }
+  .equipo-add, .equipo-list { max-width: 100%; }
+  .equipo-item { flex-wrap: wrap; }
+}

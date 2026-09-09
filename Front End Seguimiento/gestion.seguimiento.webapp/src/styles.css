@@ -1,0 +1,107 @@
+/* Estilos globales — mismo sistema de diseño (claro) que el prototipo
+   aprobado (prototipo/tablero-seguimiento.html): fondo claro, tarjetas
+   blancas, acento azul/violeta. Todos los componentes de la aplicación real
+   usan estas variables en vez de colores sueltos, para que quede consistente
+   en toda la app. */
+
+:root {
+  color-scheme: light;
+
+  --bg: #F3F4F7;
+  --surface: #FFFFFF;
+  --surface-2: #F0F1F5;
+  --border: #E2E4EA;
+  --text: #1A1D24;
+  --text-2: #565D6C;
+  --text-mute: #8A909C;
+  --accent: #4F63D2;
+  --accent-ink: #FFFFFF;
+  --accent-wash: #EBEEFC;
+  --shadow-sm: 0 1px 2px rgba(20, 22, 30, .05);
+  --shadow-md: 0 10px 28px -14px rgba(20, 22, 30, .28);
+
+  --pendiente: #B5563C;
+  --pendiente-wash: #FBEDE8;
+  --programado: #2563EB;
+  --programado-wash: #E9EFFD;
+  --enproceso: #D97706;
+  --enproceso-wash: #FCF0DC;
+  --cerrado: #16A34A;
+  --cerrado-wash: #E5F6EB;
+
+  --success: #16A34A;
+  --success-wash: #E5F6EB;
+  --danger: #DC2626;
+  --danger-wash: #FDEBEB;
+
+  --incidencia: #DC2626;
+  --incidencia-wash: #FDEBEB;
+  --requerimiento: #4F63D2;
+  --requerimiento-wash: #EBEEFC;
+  --solicitud: #0F9F8B;
+  --solicitud-wash: #E4F6F4;
+  --reunion: #8A6BCE;
+  --reunion-wash: #F0EBFB;
+}
+
+/* Base para que toda la app sea responsive: con border-box, el padding y el
+   borde de cada elemento ya no le suman ancho extra, así los layouts no se
+   desbordan en pantallas angostas (celular). */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', Roboto, "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  /* Evita que un elemento más ancho que la pantalla genere scroll horizontal
+     en todo el body (celular en modo retrato, tablas anchas, etc.). */
+  overflow-x: hidden;
+}
+
+h1, h2, h3 { font-family: 'Manrope', 'Inter', Roboto, sans-serif; }
+
+/* Alinea los componentes de Angular Material (botones, selects, tarjetas)
+   con el mismo acento de marca que usa el resto de la aplicación. El tema
+   base sigue siendo el prebuilt "azure-blue" (claro), solo se reemplaza el
+   color primario. */
+html {
+  --mat-sys-primary: var(--accent);
+  --mat-sys-on-primary: var(--accent-ink);
+  --mat-sys-primary-container: var(--accent-wash);
+  --mat-sys-on-primary-container: var(--accent);
+}
+
+
+.mat-datepicker-content,
+.mat-mdc-datepicker-content,
+.cdk-overlay-pane .mat-datepicker-content {
+  background: #ffffff !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.mat-datepicker-content .mat-calendar,
+.mat-mdc-datepicker-content .mat-mdc-calendar {
+  background: #ffffff !important;
+} 
+
+
+.filtro .mdc-notched-outline__leading {
+  border-radius: 10px 0 0 10px !important;
+  width: 10px !important;
+}
+
+.filtro .mdc-notched-outline__trailing {
+  border-radius: 0 10px 10px 0 !important;
+}
+
+
+
+
+
+
+

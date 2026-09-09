@@ -1,0 +1,109 @@
+<div class="explainer">
+  <span class="ico">🔒</span>
+  <span>
+    <b>Cuentas de acceso.</b> Vincula cada cuenta con un integrante del Equipo para que
+    esa persona solo vea y administre sus propios tickets. Sin vínculo (o con rol
+    <b>Admin</b>), la cuenta puede ver y administrar los tickets de todos.
+  </span>
+</div>
+
+<div class="toolbar">
+  <div class="spacer"></div>
+  <button mat-flat-button color="primary" (click)="abrirNuevoUsuario()">
+    <mat-icon>person_add</mat-icon> Nuevo usuario
+  </button>
+</div>
+
+<div class="tabla">
+  <div class="fila fila-head">
+    <span class="col-usuario">Usuario</span>
+    <span class="col-nombre">Nombre completo</span>
+    <span class="col-rol">Rol</span>
+    <span class="col-miembro">Integrante vinculado</span>
+    <span class="col-estado">Estado</span>
+    <span class="col-acciones"></span>
+  </div>
+
+  @for (u of usuarios; track u.Cod_Usuario) {
+    <div class="fila" [class.inactivo]="!u.Activo">
+      <span class="col-usuario">{{ u.Nom_Usuario }}</span>
+      <span class="col-nombre">{{ u.Nom_Completo }}</span>
+      <span class="col-rol">
+        <span class="rol-pill" [class.admin]="u.Rol === 'Admin'">{{ u.Rol }}</span>
+      </span>
+      <span class="col-miembro">{{ u.Nom_Miembro || 'Sin vincular' }}</span>
+      <span class="col-estado">{{ u.Activo ? 'Activo' : 'Inactivo' }}</span>
+      <span class="col-acciones">
+        <button mat-icon-button (click)="abrirEditarUsuario(u)" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        @if (u.Activo) {
+          <button mat-icon-button (click)="desactivar(u)" matTooltip="Desactivar">
+            <mat-icon>block</mat-icon>
+          </button>
+        }
+      </span>
+    </div>
+  }
+
+  @if (!usuarios.length) {
+    <div class="empty">No hay usuarios registrados.</div>
+  }
+</div>
+
+@if (modalAbierto && editing) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title">{{ editing.Accion === 'INS' ? 'Nuevo usuario' : 'Editar usuario' }}</div>
+        <button mat-icon-button (click)="cerrarModal()"><mat-icon>close</mat-icon></button>
+      </div>
+
+      <div class="row2">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Nombre de usuario</mat-label>
+          <input matInput [(ngModel)]="editing.Nom_Usuario" [disabled]="editing.Accion === 'UPD'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Rol</mat-label>
+          <mat-select [(ngModel)]="editing.Rol">
+            <mat-option value="Usuario">Usuario</mat-option>
+            <mat-option value="Admin">Admin</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Nombre completo</mat-label>
+        <input matInput [(ngModel)]="editing.Nom_Completo">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>{{ editing.Accion === 'INS' ? 'Contraseña' : 'Nueva contraseña (opcional)' }}</mat-label>
+        <input matInput type="password" [(ngModel)]="editing.Password" autocomplete="new-password">
+        @if (editing.Accion === 'UPD') {
+          <mat-hint>Déjalo vacío para conservar la contraseña actual.</mat-hint>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Integrante del equipo vinculado</mat-label>
+        <mat-select [(ngModel)]="editing.Cod_Miembro">
+          <mat-option [value]="null">Sin vincular (ve todo si es Admin)</mat-option>
+          @for (m of equipo; track m.Cod_Miembro) {
+            @if (miembroDisponible(m.Cod_Miembro)) {
+              <mat-option [value]="m.Cod_Miembro">{{ m.Nom_Miembro }}</mat-option>
+            }
+          }
+        </mat-select>
+        <mat-hint>Es lo que hace que este usuario solo vea sus propios tickets.</mat-hint>
+      </mat-form-field>
+
+      <div class="modal-actions">
+        <button mat-stroked-button (click)="cerrarModal()">Cancelar</button>
+        <button mat-flat-button color="primary" [disabled]="guardando" (click)="guardarUsuario()">Guardar</button>
+      </div>
+    </div>
+  </div>
+}

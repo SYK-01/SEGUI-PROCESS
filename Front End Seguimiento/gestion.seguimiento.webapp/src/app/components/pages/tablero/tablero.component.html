@@ -1,0 +1,232 @@
+<div class="explainer">
+  <span class="ico">💡</span>
+  <span>
+    <b>Cómo leer el tablero:</b> son 4 columnas. La columna <b>Cerrado</b> agrupa las 3 etapas finales
+    del proceso real (validación funcional → aprobación del usuario → entregado); cada tarjeta muestra
+    en cuál va. Al mover una tarjeta a Cerrado, el ticket se cierra por completo; si le falta la
+    <b>fecha fin</b>, no se deja cerrar hasta completarla.
+  </span>
+</div>
+
+<div class="metrics-mini">
+  <div class="metric-mini"><div class="val" style="color:var(--accent)">{{ totalActivos }}</div><div class="lbl">Activos</div></div>
+  <div class="metric-mini"><div class="val" style="color:var(--danger)">{{ totalIncidentesAbiertos }}</div><div class="lbl">Incidentes abiertos</div></div>
+  <div class="metric-mini"><div class="val" style="color:var(--cerrado)">{{ totalResueltos }}</div><div class="lbl">Cerrados</div></div>
+</div>
+
+<div class="carga">
+  @for (c of cargaPorSistema(); track c.sistema.Cod_Sistema) {
+    <div class="carga-item" [matTooltip]="c.sistema.Nom_Sistema + ': ' + c.n + ' activos'">
+      <div class="carga-fill" [style.width.%]="(c.n / cargaMax()) * 100"></div>
+      <div class="carga-label">{{ c.sistema.Cod_Corto }} · {{ c.n }}</div>
+    </div>
+  }
+</div>
+
+<div class="toolbar">
+  @for (s of sistemas; track s.Cod_Sistema) {
+    <button class="sistema-btn" [class.active]="s.Cod_Sistema === sistemaActivo" (click)="setSistemaActivo(s.Cod_Sistema)">
+      {{ s.Nom_Sistema }}
+    </button>
+  }
+  <div class="spacer"></div>
+
+  @if (esAdmin) {
+    <mat-form-field appearance="outline" class="filtro">
+      <mat-select [(ngModel)]="filterResponsable" placeholder="Todos los responsables">
+        <mat-option [value]="null">Todos los responsables</mat-option>
+        @for (m of equipo; track m.Cod_Miembro) {
+          <mat-option [value]="m.Cod_Miembro">{{ m.Nom_Miembro }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+
+  <mat-form-field appearance="outline" class="filtro">
+    <mat-select [(ngModel)]="filterTipo" placeholder="Todos los tipos">
+      <mat-option [value]="''">Todos los tipos</mat-option>
+      @for (t of tipos; track t) {
+        <mat-option [value]="t">{{ t }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-stroked-button (click)="exportarExcel()">
+    <mat-icon>grid_on</mat-icon> Exportar a Excel
+  </button>
+
+  <button mat-flat-button color="primary" (click)="abrirNuevoTicket()">
+    <mat-icon>add</mat-icon> Nuevo ticket
+  </button>
+</div>
+
+<div class="board">
+  @for (col of columnas; track col) {
+    <div class="col">
+      <div class="col-head">
+        <span class="dot" [style.background]="columnaColor[col]"></span>
+        <span class="col-title">{{ col }}</span>
+        <span class="col-count">{{ columna(col).length }}</span>
+      </div>
+      @if (col === 'Cerrado') {
+        <div class="col-sub">Validación funcional · Aprobación usuario · Entregado</div>
+      }
+
+      @if (columna(col).length === 0) {
+        <div class="empty">Sin tickets</div>
+      }
+
+      @for (t of columna(col); track t.Num_Ticket) {
+        <div class="card">
+          <div class="card-top">
+            <span class="code">{{ t.Codigo }}</span>
+            <span class="badge" [style.background]="tipoColorWash[t.Tipo]" [style.color]="tipoColor[t.Tipo]">{{ t.Tipo }}</span>
+          </div>
+          @if (col === 'Cerrado') {
+            <div class="sub-pill">{{ subEstadoCorto(t) }}</div>
+          }
+          <div class="card-title">{{ t.Titulo }}</div>
+          <div class="card-meta">
+            <span class="resp">{{ t.Nom_Responsable || 'Sin asignar' }}</span>
+            <span class="prio" [style.color]="prioridadColor[t.Prioridad]">{{ t.Prioridad }}</span>
+          </div>
+          <div class="card-actions">
+            <mat-form-field appearance="outline" class="mini-select">
+              <mat-select [ngModel]="col" (selectionChange)="moverColumna(t, $event.value)">
+                @for (c of columnas; track c) {
+                  <mat-option [value]="c">{{ c }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <button mat-icon-button (click)="abrirEditarTicket(t)" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="eliminarTicket(t)" matTooltip="Eliminar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (modalAbierto && editing) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title">{{ editing.Accion === 'INS' ? 'Nuevo ticket' : 'Editar ticket' }}</div>
+        <button mat-icon-button (click)="cerrarModal()"><mat-icon>close</mat-icon></button>
+      </div>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Sistema</mat-label>
+        <mat-select [(ngModel)]="editing.Cod_Sistema">
+          @for (s of sistemas; track s.Cod_Sistema) {
+            <mat-option [value]="s.Cod_Sistema">{{ s.Nom_Sistema }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="row2">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Tipo</mat-label>
+          <mat-select [(ngModel)]="editing.Tipo">
+            @for (t of tipos; track t) {
+              <mat-option [value]="t">{{ t }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Prioridad</mat-label>
+          <mat-select [(ngModel)]="editing.Prioridad">
+            @for (p of prioridades; track p) {
+              <mat-option [value]="p">{{ p }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Título</mat-label>
+        <input matInput [(ngModel)]="editing.Titulo" placeholder="Descripción breve del ticket">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput rows="3" [(ngModel)]="editing.Descripcion"></textarea>
+      </mat-form-field>
+
+      <div class="row2">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Responsable</mat-label>
+          <mat-select [(ngModel)]="editing.Cod_Responsable" [disabled]="!esAdmin">
+            <mat-option [value]="null">Sin asignar</mat-option>
+            @for (m of equipo; track m.Cod_Miembro) {
+              <mat-option [value]="m.Cod_Miembro">{{ m.Nom_Miembro }}</mat-option>
+            }
+          </mat-select>
+          @if (!esAdmin) {
+            <mat-hint>Los tickets siempre quedan a tu nombre.</mat-hint>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Estado (detalle)</mat-label>
+          <mat-select [(ngModel)]="editing.Estado">
+            @for (col of columnas; track col) {
+              <mat-optgroup [label]="col">
+                @for (e of estadosDeColumna(col); track e) {
+                  <mat-option [value]="e">{{ e }}</mat-option>
+                }
+              </mat-optgroup>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="row2">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Fecha creación</mat-label>
+      <input matInput [matDatepicker]="pickerCreacion" [(ngModel)]="editing.Fecha_Creacion">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerCreacion"></mat-datepicker-toggle>
+      <mat-datepicker #pickerCreacion></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full" [class.warn-field]="focoFechaFin && !editing.Fecha_Real_Final">
+      <mat-label>Fecha fin</mat-label>
+      <input matInput [matDatepicker]="pickerFin" [(ngModel)]="editing.Fecha_Real_Final">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+      <mat-datepicker #pickerFin></mat-datepicker>
+      @if (focoFechaFin && !editing.Fecha_Real_Final) {
+        <mat-hint style="color:var(--danger)">Obligatoria para pasar a "Cerrado".</mat-hint>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="row2">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Inicio estimado</mat-label>
+      <input matInput [matDatepicker]="pickerInicio" [(ngModel)]="editing.Fecha_Estimada_Inicio">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+      <mat-datepicker #pickerInicio></mat-datepicker>
+      <mat-hint>Para la vista Gantt.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Entrega estimada</mat-label>
+      <input matInput [matDatepicker]="pickerEntrega" [(ngModel)]="editing.Fecha_Estimada_Entrega">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerEntrega"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEntrega></mat-datepicker>
+      <mat-hint>Para la vista Gantt.</mat-hint>
+    </mat-form-field>
+  </div>
+
+      <div class="modal-actions">
+        <button mat-stroked-button (click)="cerrarModal()">Cancelar</button>
+        <button mat-flat-button color="primary" [disabled]="guardando" (click)="guardarTicket()">Guardar</button>
+      </div>
+    </div>
+  </div>
+}

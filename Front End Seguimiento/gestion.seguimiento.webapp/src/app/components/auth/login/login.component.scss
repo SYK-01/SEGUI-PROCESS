@@ -1,0 +1,94 @@
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 15% 15%, var(--accent-wash), transparent 45%),
+    radial-gradient(circle at 85% 85%, var(--accent-wash), transparent 50%),
+    var(--bg);
+  padding: 16px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 32px 28px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.login-card mat-icon[matPrefix] {
+  margin-right: 8px;
+  color: var(--text-mute);
+}
+
+.login-header {
+  margin-bottom: 20px;
+}
+
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(155deg, var(--accent), #7C6FF0);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.login-header h1 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: var(--text);
+}
+
+.login-header p {
+  font-size: 13px;
+  color: var(--text-mute);
+  margin: 0;
+}
+
+.full {
+  width: 100%;
+  display: block;
+}
+
+.boton-ingresar {
+  height: 44px;
+  margin-top: 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 35%, transparent);
+  transition: box-shadow .15s, transform .15s;
+}
+
+.boton-ingresar ::ng-deep .mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.boton-ingresar:hover:not([disabled]) {
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--accent) 45%, transparent);
+  transform: translateY(-1px);
+}
+
+.boton-ingresar[disabled] {
+  opacity: .7;
+  box-shadow: none;
+}

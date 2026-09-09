@@ -1,0 +1,67 @@
+<div class="explainer">
+  <span class="ico">📅</span>
+  <span>
+    <b>Vista Gantt.</b> Las barras usan la planificación (inicio/entrega estimados) que se
+    carga desde el modal de cada ticket en el tablero. Si un ticket todavía no la tiene, se
+    aproxima con su fecha de creación y se marca con un borde punteado.
+  </span>
+</div>
+
+<div class="toolbar">
+  <div class="switch">
+    <button class="switch-btn" [class.active]="vista === 'dia'" (click)="cambiarVista('dia')">
+      <mat-icon>view_day</mat-icon> Por día
+    </button>
+    <button class="switch-btn" [class.active]="vista === 'mes'" (click)="cambiarVista('mes')">
+      <mat-icon>calendar_view_month</mat-icon> Por mes
+    </button>
+  </div>
+  <div class="spacer"></div>
+  <div class="leyenda">
+    @for (col of columnas; track col) {
+      <span class="leyenda-item">
+        <span class="dot" [style.background]="columnaColor[col]"></span>{{ col }}
+      </span>
+    }
+  </div>
+</div>
+
+@if (cargando) {
+  <div class="empty">Cargando...</div>
+} @else if (!barras.length) {
+  <div class="empty">No hay tickets para mostrar en el Gantt.</div>
+} @else {
+  <div class="gantt-scroll">
+    <div class="gantt" [style.width.px]="anchoTotalPx + 240">
+      <div class="gantt-header">
+        <div class="label label-head">Ticket</div>
+        <div class="cells">
+          @for (h of encabezados; track $index) {
+            <div class="cell" [style.width.px]="anchoUnidadPx" [class.hoy]="h.esHoy" [class.mes]="esVistaMes">
+              {{ h.etiqueta }}
+            </div>
+          }
+        </div>
+      </div>
+
+      @for (b of barras; track b.ticket.Num_Ticket) {
+        <div class="gantt-row">
+          <div class="label" [matTooltip]="b.ticket.Titulo">
+            <span class="code">{{ b.ticket.Codigo }}</span>
+            <span class="titulo">{{ b.ticket.Titulo }}</span>
+          </div>
+          <div class="cells" [style.width.px]="anchoTotalPx">
+            <div
+              class="barra"
+              [class.aproximada]="!b.usaFechaEstimada"
+              [style.left]="barraEstiloIzq(b)"
+              [style.width]="barraEstiloAncho(b)"
+              [style.background]="columnaColor[b.columna]"
+              [matTooltip]="b.ticket.Codigo + ' · ' + formatoFecha(b.inicio) + ' → ' + formatoFecha(b.fin)">
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

@@ -1,0 +1,76 @@
+<div class="pantalla-solo no-print">
+  <div class="explainer">
+    <span class="ico">🖨️</span>
+    <span>
+      <b>Vista de impresión.</b> Es una lista por columna en vez del tablero en tarjetas:
+      el grid de 4 columnas no pagina bien en papel.
+    </span>
+  </div>
+  <button mat-flat-button color="primary" (click)="imprimir()">
+    <mat-icon>print</mat-icon> Imprimir / Guardar PDF
+  </button>
+</div>
+
+@if (cargando) {
+  <div class="empty no-print">Cargando...</div>
+} @else {
+  <div class="hoja">
+    <div class="hoja-head">
+      <div class="titulo-hoja">Tablero de Seguimiento — Precotex</div>
+      <div class="fecha-hoja">Generado el {{ fechaGeneracion | date:'dd/MM/yyyy HH:mm' }}</div>
+    </div>
+
+    @for (col of columnas; track col) {
+      <div class="bloque-col">
+        <div class="col-head" [style.borderColor]="columnaColor[col]">
+          <span class="dot" [style.background]="columnaColor[col]"></span>
+          <span class="col-title">{{ col }}</span>
+          <span class="col-count">{{ ticketsDe(col).length }} tickets</span>
+        </div>
+
+        @if (!ticketsDe(col).length) {
+          <div class="empty">Sin tickets.</div>
+        } @else {
+          <div class="tabla-scroll">
+          <table class="tabla-imprimir">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Sistema</th>
+                <th>Tipo</th>
+                <th>Prioridad</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Responsable</th>
+                <th>Estado</th>
+                <th>Fecha creación</th>
+                <th>Fecha fin</th>
+                <th>Inicio estimado</th>
+                <th>Entrega estimada</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (t of ticketsDe(col); track t.Num_Ticket) {
+                <tr>
+                  <td>{{ t.Codigo }}</td>
+                  <td>{{ t.Nom_Sistema || nombreSistema(t.Cod_Sistema) }}</td>
+                  <td>{{ t.Tipo }}</td>
+                  <td>{{ t.Prioridad }}</td>
+                  <td>{{ t.Titulo }}</td>
+                  <td>{{ t.Descripcion || '—' }}</td>
+                  <td>{{ t.Nom_Responsable || 'Sin asignar' }}</td>
+                  <td>{{ t.Estado }}</td>
+                  <td>{{ t.Fecha_Creacion | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ (t.Fecha_Real_Final | date:'dd/MM/yyyy') || '—' }}</td>
+                  <td>{{ (t.Fecha_Estimada_Inicio | date:'dd/MM/yyyy') || '—' }}</td>
+                  <td>{{ (t.Fecha_Estimada_Entrega | date:'dd/MM/yyyy') || '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,23 @@
+.logout-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.logout-card {
+  text-align: center;
+  padding: 32px;
+  max-width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+  color: var(--accent);
+}

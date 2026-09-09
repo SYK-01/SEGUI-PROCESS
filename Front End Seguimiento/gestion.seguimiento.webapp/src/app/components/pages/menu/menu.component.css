@@ -1,0 +1,141 @@
+.shell {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.toolbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 8px;
+  min-width: 0;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(155deg, var(--accent), #7C6FF0);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eyebrow {
+  font-size: 11px;
+  color: var(--text-mute);
+  font-weight: 500;
+}
+
+.nav {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+  /* Ninguna pantalla es lo bastante angosta como para "romper" el menú: si
+     no entran todas las opciones, el propio nav se desplaza horizontalmente
+     en vez de empujar el resto de la barra fuera de la pantalla. min-width:0
+     es necesario para que un hijo flex pueda encogerse por debajo de su
+     ancho de contenido y que el overflow-x realmente entre en juego. */
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 7px;
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  flex: none;
+  white-space: nowrap;
+}
+
+.nav-item mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.nav-item.active {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-item:hover:not(.active) {
+  color: var(--text);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.content {
+  padding: 24px 28px;
+}
+
+/* --- Responsive ---
+   El toolbar (marca + nav + usuario) es lo primero que se queda sin espacio
+   en pantallas angostas. Por pasos: primero se esconde el subtítulo y el
+   texto de cada botón del menú (quedan solo los íconos, con tooltip); en
+   celular además se esconde el nombre de usuario (queda el ícono) y se
+   reduce el padding del contenido para no desperdiciar ancho. */
+@media (max-width: 900px) {
+  .eyebrow { display: none; }
+  .nav-item-label { display: none; }
+  .nav-item { padding: 7px 10px; }
+  .content { padding: 18px 14px; }
+}
+
+@media (max-width: 600px) {
+  .toolbar { gap: 8px; padding: 0 8px; }
+  .brand-text .title { font-size: 13px; }
+  .user-label { display: none; }
+  .content { padding: 14px 10px; }
+}
+
+/* Al imprimir (vista de impresión del tablero) solo debe salir la hoja, no
+   el menú ni la barra superior de la SPA. */
+@media print {
+  .toolbar { display: none !important; }
+  .shell { background: #fff; min-height: 0; }
+  .content { padding: 0; }
+}

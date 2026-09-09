@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  color: var(--text);
+}
+
+.explainer {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--accent-wash);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.explainer b { color: var(--text); }
+.explainer .ico { flex: none; }
+
+.pantalla-solo {
+  margin-bottom: 20px;
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--text-mute);
+  padding: 12px 0;
+}
+
+.hoja {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.hoja-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+.titulo-hoja { font-size: 16px; font-weight: 700; color: var(--text); }
+.fecha-hoja { font-size: 11px; color: var(--text-mute); }
+
+.bloque-col {
+  margin-bottom: 24px;
+}
+
+.col-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-left: 4px solid;
+  padding: 4px 0 4px 10px;
+  margin-bottom: 8px;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; }
+.col-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.col-count { font-size: 11px; color: var(--text-mute); margin-left: auto; }
+
+/* En pantalla (no al imprimir) la tabla puede tener más columnas de las que
+   caben en un celular; que se desplace horizontalmente ella sola en vez de
+   forzar scroll horizontal a toda la página. */
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+.tabla-imprimir {
+  width: 100%;
+  /* Ahora trae todos los campos del ticket (descripción, estado detallado,
+     las 4 fechas) — más ancha, por eso el mínimo sube y depende más del
+     scroll horizontal propio (.tabla-scroll) en pantalla. */
+  min-width: 1100px;
+  border-collapse: collapse;
+  font-size: 11.5px;
+}
+.tabla-imprimir td { max-width: 220px; }
+.tabla-imprimir th {
+  text-align: left;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--text-mute);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.tabla-imprimir td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* Al imprimir: solo la hoja, fondo blanco puro (nada de la interfaz de la
+   SPA ni el botón "Imprimir"). El menú/toolbar se oculta desde
+   menu.component.css. */
+@media print {
+  .no-print { display: none !important; }
+
+  .hoja {
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+  .hoja-head { border-bottom-color: #000; }
+  .fecha-hoja { color: #444; }
+  .col-count { color: #444; }
+  .tabla-scroll { overflow-x: visible; }
+  .tabla-imprimir { min-width: 0; }
+  .tabla-imprimir th { color: #333; border-bottom-color: #999; }
+  .tabla-imprimir td { border-bottom-color: #ccc; color: #000; }
+  .bloque-col { break-inside: avoid; page-break-inside: avoid; }
+}
+
+@media (max-width: 600px) {
+  .hoja { padding: 14px; }
+  .hoja-head { flex-direction: column; align-items: flex-start; gap: 2px; }
+}

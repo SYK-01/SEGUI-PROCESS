@@ -1,0 +1,62 @@
+@if (resumen) {
+  <div class="explainer">
+    <span class="ico">📊</span>
+    <span>
+      <b>Qué cambió aquí:</b> el gráfico de estados antes mostraba 6 etiquetas largas y difíciles
+      de leer de un vistazo. Ahora se agrupan en las mismas 4 columnas del tablero (Pendiente,
+      Programado, En Proceso, Cerrado) — pasa el cursor sobre "Cerrado" para ver el detalle de
+      las 3 etapas finales (validación funcional, aprobación del usuario, entregado).
+    </span>
+  </div>
+
+  <div class="toolbar">
+    <span class="spacer"></span>
+    <button mat-stroked-button (click)="exportarExcel()">
+      <mat-icon>grid_on</mat-icon> Exportar a Excel
+    </button>
+  </div>
+
+  <div class="dash-metrics">
+    <mat-card class="metric-card">
+      <div class="head">Total tickets</div>
+      <div class="value">{{ resumen.Metricas.Total_Tickets }}</div>
+    </mat-card>
+    <mat-card class="metric-card">
+      <div class="head" style="color:var(--danger)">Incidentes abiertos</div>
+      <div class="value">{{ resumen.Metricas.Incidentes_Abiertos }}</div>
+    </mat-card>
+    <mat-card class="metric-card">
+      <div class="head" style="color:var(--cerrado)">Cerrados</div>
+      <div class="value">{{ resumen.Metricas.Resueltos_Cerrados }}</div>
+    </mat-card>
+    <mat-card class="metric-card">
+      <div class="head" style="color:var(--accent)">Tiempo prom. de cierre</div>
+      <div class="value">{{ resumen.Metricas.Tiempo_Promedio_Resolucion }} d</div>
+    </mat-card>
+  </div>
+
+  <div class="charts-row">
+    <mat-card class="panel">
+      <div class="panel-title">Tickets por sistema y tipo</div>
+      <div class="chart-wrap"><canvas #chartSistema></canvas></div>
+    </mat-card>
+    <mat-card class="panel">
+      <div class="panel-title">Distribución por columna</div>
+      <div class="chart-wrap"><canvas #chartEstado></canvas></div>
+    </mat-card>
+  </div>
+
+  <mat-card class="panel">
+    <div class="panel-title">Tickets por sistema y estado</div>
+    <div class="chart-wrap chart-wrap-lg"><canvas #chartSistemaEstado></canvas></div>
+  </mat-card>
+
+  <mat-card class="panel">
+    <div class="panel-title">Carga de trabajo por responsable (tickets aún no cerrados)</div>
+    <div class="chart-wrap chart-wrap-lg"><canvas #chartResponsable></canvas></div>
+  </mat-card>
+} @else {
+  <div class="cargando">
+    <mat-progress-spinner mode="indeterminate" diameter="32"></mat-progress-spinner>
+  </div>
+}

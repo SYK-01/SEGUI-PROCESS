@@ -1,0 +1,38 @@
+<div class="equipo-add">
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Nombre del integrante</mat-label>
+    <input matInput [(ngModel)]="nuevoMiembro" (keydown.enter)="agregar()">
+  </mat-form-field>
+  <button mat-flat-button color="primary" [disabled]="guardando" (click)="agregar()">
+    <mat-icon>add</mat-icon> Agregar
+  </button>
+</div>
+
+<div class="equipo-list">
+  @for (m of equipo; track m.Cod_Miembro) {
+    <div class="equipo-item">
+      @if (editandoId === m.Cod_Miembro) {
+        <input class="edit-input" [(ngModel)]="editNombre" (keydown.enter)="guardarEdicion(m)" (keydown.escape)="cancelarEdicion()">
+        <button mat-icon-button [disabled]="guardando" (click)="guardarEdicion(m)" matTooltip="Guardar">
+          <mat-icon>check</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelarEdicion()" matTooltip="Cancelar">
+          <mat-icon>close</mat-icon>
+        </button>
+      } @else {
+        <span class="nombre">{{ m.Nom_Miembro }}</span>
+        <span class="cnt">{{ m.Tickets_Activos }} activos</span>
+        <button mat-icon-button (click)="editar(m)" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="eliminar(m)" matTooltip="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      }
+    </div>
+  }
+
+  @if (!equipo.length) {
+    <div class="empty">No hay integrantes registrados.</div>
+  }
+</div>
