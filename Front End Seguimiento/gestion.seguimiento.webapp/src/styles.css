@@ -99,6 +99,204 @@ html {
   border-radius: 0 10px 10px 0 !important;
 }
 
+.metrics-mini {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  margin: 16px 0 !important;
+}
+
+/* Metrics cards - glow effect */
+.metric-mini {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  padding: 24px 28px !important;
+  border-radius: 24px !important;
+  border: none !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  cursor: default !important;
+  position: relative !important;
+}
+
+.metric-mini:hover {
+  transform: translateY(-3px) !important;
+}
+
+/* Activos - glow azul */
+.metric-activos,
+.metric-incidentes,
+.metric-cerrados {
+  background: #fff !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+}
+
+.metric-activos .metric-icon {
+  background: rgba(79, 99, 210, 0.12) !important;
+  color: #4F63D2 !important;
+}
+
+.metric-incidentes .metric-icon {
+  background: rgba(220, 53, 69, 0.1) !important;
+  color: #dc3545 !important;
+}
+
+.metric-cerrados .metric-icon {
+  background: rgba(40, 167, 69, 0.1) !important;
+  color: #28a745 !important;
+}
+
+.metric-activos .val { color: #4F63D2 !important; }
+.metric-incidentes .val { color: #dc3545 !important; }
+.metric-cerrados .val { color: #28a745 !important; }
+
+.metric-activos .lbl,
+.metric-incidentes .lbl,
+.metric-cerrados .lbl {
+  color: #888 !important;
+}
+
+.metric-activos { background: #fff; }
+.metric-incidentes { background: #fff; }
+.metric-cerrados { background: #fff; }
+
+.metric-info .val {
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+.metric-activos .val { color: #4F63D2 !important; }
+.metric-incidentes .val { color: #dc3545 !important; }
+.metric-cerrados .val { color: #28a745 !important; }
+
+.metric-info .lbl {
+  font-size: 0.85rem !important;
+  color: #888 !important;
+  margin-top: 4px !important;
+}
+
+
+/* Minimal filter pills */
+.filtro .mdc-notched-outline__leading,
+.filtro .mdc-notched-outline__notch,
+.filtro .mdc-notched-outline__trailing {
+  border: none !important;
+}
+
+.filtro .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.filtro .mat-mdc-text-field-wrapper {
+  background: #f5f5f5 !important;
+  border-radius: 24px !important;
+  padding: 0 20px !important;
+}
+
+.filtro .mat-mdc-select-value-text {
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  color: #222 !important;
+}
+
+.filtro .mat-mdc-select-arrow {
+  color: #555 !important;
+}
+
+.filtro:hover .mat-mdc-text-field-wrapper {
+  background: #ebebeb !important;
+}
+
+
+/* Ocultar flecha default */
+.filtro .mat-mdc-select-arrow-wrapper {
+  display: none !important;
+}
+
+/* Dropdown panel - estilo glass claro */
+.mat-mdc-select-panel,
+.mat-select-panel {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 
+              0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+  padding: 8px !important;
+  margin-top: 8px !important;
+}
+
+/* Options */
+.mat-mdc-option,
+.mat-option {
+  border-radius: 10px !important;
+  margin: 2px 4px !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  color: #333 !important;
+  min-height: 44px !important;
+  transition: background 0.15s ease !important;
+}
+
+.mat-mdc-option:hover,
+.mat-option:hover {
+  background: rgba(79, 99, 210, 0.08) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected,
+.mat-option.mat-selected {
+  background: rgba(79, 99, 210, 0.12) !important;
+  color: #4F63D2 !important;
+}
+
+/* Checkmark */
+.mat-pseudo-checkbox-checked {
+  background: none !important;
+}
+
+.card-actions .mat-mdc-text-field-wrapper {
+  background: #fff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 999px !important;
+  padding: 0 16px !important;
+  height: 36px !important;
+}
+
+.card-actions .mdc-notched-outline {
+  display: none !important;
+}
+
+.card-actions .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.card-actions .mat-mdc-select-value-text {
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: #333 !important;
+}
+
+.card-actions .mat-mdc-form-field-flex {
+  align-items: center !important;
+  height: 36px !important;
+}
+
+.card-actions .mat-mdc-form-field-infix {
+  padding: 0 !important;
+  min-height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Agregar chevron custom con SVG */
+.filtro .mat-mdc-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  padding-right: 24px !important;
+}
 
 
 

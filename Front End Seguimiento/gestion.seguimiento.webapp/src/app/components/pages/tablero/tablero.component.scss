@@ -54,55 +54,74 @@
 
 .carga {
   display: flex;
-  gap: 2px;
+  gap: 4px;
   margin-bottom: 20px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 3px;
-  /* Con muchos sistemas en una pantalla angosta, "flex:1" sin piso los
-     achicaba hasta que el texto de un ítem se montaba sobre el siguiente.
-     Con un ancho mínimo por ítem, si no entran todos el conjunto se
-     desplaza horizontalmente (como el Gantt) en vez de deformarse. */
-  overflow-x: auto;
-  scrollbar-width: thin;
+  background: #f5f5f5;
+  border-radius: 16px;
+  padding: 6px;
+  overflow: hidden;
 }
 
 .carga-item {
   flex: 1 0 96px;
   min-width: 96px;
-  height: 26px;
-  border-radius: 6px;
+  height: auto;
+  border-radius: 12px;
+  padding: 8px 12px;
   position: relative;
-  background: var(--surface);
   overflow: hidden;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.4s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+
 }
 
 .carga-fill {
   position: absolute;
   left: 0; top: 0; bottom: 0;
-  background: var(--accent);
-  opacity: .85;
-  transition: width .3s;
+  border-radius: 12px;
+  background: #e0e0e0;
+  opacity: 0.3;
+  transition: all 0.4s ease;
 }
 
 .carga-label {
-  /* display:block (no flex) para que text-overflow:ellipsis funcione de
-     forma confiable; el centrado vertical se logra igualando line-height
-     con la altura del ítem. */
   position: relative;
   z-index: 1;
-  display: block;
-  height: 100%;
-  line-height: 26px;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 0 6px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.75rem;
+  transition: all 0.4s ease;
 }
+
+/* Al hacer click / activo */
+.carga-item.activo {
+  background: transparent;
+  box-shadow: 0 0 20px rgba(79, 99, 210, 0.4);
+  transform: scale(1.02);
+}
+
+.carga-item.activo .carga-fill {
+  opacity: 1;
+}
+
+.carga-item.activo .carga-label {
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+
+
+/* Colores por sistema cuando activo */
+.carga-item:nth-child(1).activo .carga-fill { background: linear-gradient(135deg, #4F63D2, #6B7FF5); box-shadow: 0 0 12px rgba(79,99,210,0.4); }
+.carga-item:nth-child(2).activo .carga-fill { background: linear-gradient(135deg, #7C3AED, #A78BFA); box-shadow: 0 0 12px rgba(124,58,237,0.4); }
+.carga-item:nth-child(3).activo .carga-fill { background: linear-gradient(135deg, #2563EB, #60A5FA); box-shadow: 0 0 12px rgba(37,99,235,0.4); }
+.carga-item:nth-child(4).activo .carga-fill { background: linear-gradient(135deg, #059669, #34D399); box-shadow: 0 0 12px rgba(5,150,105,0.4); }
+.carga-item:nth-child(5).activo .carga-fill { background: linear-gradient(135deg, #D97706, #FBBF24); box-shadow: 0 0 12px rgba(217,119,6,0.4); }
+.carga-item:nth-child(6).activo .carga-fill { background: linear-gradient(135deg, #DC2626, #F87171); box-shadow: 0 0 12px rgba(220,38,38,0.4); }
+.carga-item:nth-child(7).activo .carga-fill { background: linear-gradient(135deg, #0891B2, #67E8F9); box-shadow: 0 0 12px rgba(8,145,178,0.4); }
+
 
 .toolbar {
   display: flex;
@@ -148,9 +167,9 @@
 }
 
 .col {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  background: rgba(173, 216, 230, 0.08);
+  border: 1px solid rgba(173, 216, 230, 0.15);
+  border-radius: 16px;
   padding: 10px;
   min-height: 200px;
 }
@@ -175,47 +194,63 @@
   border-radius: 999px;
   padding: 1px 8px;
 }
+
 .empty {
-  font-size: 12px;
-  color: var(--text-mute);
-  text-align: center;
-  padding: 16px 6px;
-  border: 1px dashed var(--border);
-  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #bbb;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px dashed rgba(0,0,0,0.1);
+  border-radius: 16px;
+  background: rgba(0,0,0,0.02);
 }
+
 
 .card {
-  background: var(--surface);
-  border-radius: 10px;
-  padding: 10px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 8px;
+  background: #fafafa;
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  margin-bottom: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+
 .code { font-family: ui-monospace, monospace; font-size: 10px; color: var(--text-mute); }
 
 .badge {
   font-size: 10px;
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 3px 10px;
   border-radius: 999px;
   letter-spacing: .02em;
 }
 
-.card-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; color: var(--text); overflow-wrap: break-word; }
-.card-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
+.card-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; color: var(--text); overflow-wrap: break-word; }
+
+.card-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 12px; }
+
 .resp { font-size: 11px; color: var(--text-2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .prio { font-size: 10px; font-weight: 700; flex: none; }
 
 .card-actions {
   display: flex;
-  gap: 2px;
+  gap: 4px;
   align-items: center;
-  border-top: 1px solid var(--border);
-  padding-top: 8px;
-  margin-top: 1px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding-top: 6px;
+  margin-top: 0;
 }
 
 .mini-select {

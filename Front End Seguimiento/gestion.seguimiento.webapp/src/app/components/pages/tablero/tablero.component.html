@@ -9,19 +9,45 @@
 </div>
 
 <div class="metrics-mini">
-  <div class="metric-mini"><div class="val" style="color:var(--accent)">{{ totalActivos }}</div><div class="lbl">Activos</div></div>
-  <div class="metric-mini"><div class="val" style="color:var(--danger)">{{ totalIncidentesAbiertos }}</div><div class="lbl">Incidentes abiertos</div></div>
-  <div class="metric-mini"><div class="val" style="color:var(--cerrado)">{{ totalResueltos }}</div><div class="lbl">Cerrados</div></div>
+  <div class="metric-mini metric-activos">
+    <div class="metric-icon">
+      <mat-icon>assignment</mat-icon>
+    </div>
+    <div class="metric-info">
+      <div class="val">{{ totalActivos }}</div>
+      <div class="lbl">Activos</div>
+    </div>
+  </div>
+
+  <div class="metric-mini metric-incidentes">
+    <div class="metric-icon">
+      <mat-icon>warning</mat-icon>
+    </div>
+    <div class="metric-info">
+      <div class="val">{{ totalIncidentesAbiertos }}</div>
+      <div class="lbl">Incidentes abiertos</div>
+    </div>
+  </div>
+
+  <div class="metric-mini metric-cerrados">
+    <div class="metric-icon">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+    <div class="metric-info">
+      <div class="val">{{ totalResueltos }}</div>
+      <div class="lbl">Cerrados</div>
+    </div>
+  </div>
 </div>
 
-<div class="carga">
-  @for (c of cargaPorSistema(); track c.sistema.Cod_Sistema) {
-    <div class="carga-item" [matTooltip]="c.sistema.Nom_Sistema + ': ' + c.n + ' activos'">
-      <div class="carga-fill" [style.width.%]="(c.n / cargaMax()) * 100"></div>
-      <div class="carga-label">{{ c.sistema.Cod_Corto }} · {{ c.n }}</div>
-    </div>
-  }
-</div>
+  <div class="carga">
+    @for (c of cargaPorSistema(); track c.sistema.Cod_Sistema) {
+      <div class="carga-item" [class.activo]="c.sistema.Cod_Sistema === sistemaActivo" (click)="setSistemaActivo(c.sistema.Cod_Sistema)" [matTooltip]="c.sistema.Nom_Sistema + ': ' + c.n + ' activos'">
+        <div class="carga-fill" [style.width.%]="(c.n / cargaMax()) * 100"></div>
+        <div class="carga-label">{{ c.sistema.Cod_Corto }} · {{ c.n }}</div>
+      </div>
+    }
+  </div>
 
 <div class="toolbar">
   @for (s of sistemas; track s.Cod_Sistema) {
@@ -63,7 +89,7 @@
 <div class="board">
   @for (col of columnas; track col) {
     <div class="col">
-      <div class="col-head">
+        <div class="col-head" [style.border-color]="columnaColor[col]">
         <span class="dot" [style.background]="columnaColor[col]"></span>
         <span class="col-title">{{ col }}</span>
         <span class="col-count">{{ columna(col).length }}</span>
@@ -230,3 +256,5 @@
     </div>
   </div>
 }
+
+

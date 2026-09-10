@@ -5,6 +5,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { httpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-PE';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +17,10 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, httpErrorInterceptor])
     ),
     provideAnimationsAsync(),
+    { provide: MAT_DATE_LOCALE, useValue: 'es-PE' },
   ]
 };
+
+
+
+

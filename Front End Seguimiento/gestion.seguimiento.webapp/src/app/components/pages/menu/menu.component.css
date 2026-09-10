@@ -7,7 +7,10 @@
 .toolbar {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  gap: 16px;
+  gap: 24px;
+  padding: 0 40px;
+  height: 72px;
+  transition: box-shadow 0.3s ease;
 }
 
 .brand {
@@ -57,35 +60,49 @@
 
 .nav {
   display: flex;
-  gap: 4px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 3px;
-  /* Ninguna pantalla es lo bastante angosta como para "romper" el menú: si
-     no entran todas las opciones, el propio nav se desplaza horizontalmente
-     en vez de empujar el resto de la barra fuera de la pantalla. min-width:0
-     es necesario para que un hijo flex pueda encogerse por debajo de su
-     ancho de contenido y que el overflow-x realmente entre en juego. */
+  gap: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
 .nav::-webkit-scrollbar { display: none; }
 
 .nav-item {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 14px;
-  border-radius: 7px;
+  padding: 8px 16px;
+  border-radius: 0;
   color: var(--text-2);
   text-decoration: none;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   flex: none;
   white-space: nowrap;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.25s ease, left 0.25s ease;
+}
+
+.nav-item:hover::after {
+  width: 100%;
+  left: 0;
 }
 
 .nav-item mat-icon {
@@ -96,13 +113,19 @@
 
 .nav-item.active {
   color: var(--text);
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  background: transparent;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.nav-item.active::after {
+  width: 100%;
+  left: 0;
 }
 
 .nav-item:hover:not(.active) {
   color: var(--text);
-}
+} 
 
 .spacer {
   flex: 1;

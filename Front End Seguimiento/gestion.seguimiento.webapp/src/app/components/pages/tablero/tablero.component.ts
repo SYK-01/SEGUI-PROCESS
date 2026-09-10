@@ -14,7 +14,6 @@ import { Sistema } from '../../../interfaces/models/Sistema.interface';
 import { MiembroEquipo } from '../../../interfaces/models/MiembroEquipo.interface';
 import { Ticket } from '../../../interfaces/models/Ticket.interface';
 
-
 import {
   COLUMNA_A_ESTADO_DEFECTO,
   COLUMNA_COLOR,
@@ -177,7 +176,7 @@ export class TableroComponent implements OnInit {
   }
 
   setSistemaActivo(cod: number): void {
-    this.sistemaActivo = cod;
+    this.sistemaActivo = this.sistemaActivo === cod ? null : cod;
   }
 
   /**
@@ -252,6 +251,7 @@ export class TableroComponent implements OnInit {
       Fecha_Real_Final: '',
       Fecha_Estimada_Inicio: '',
       Fecha_Estimada_Entrega: ''
+    
     };
     this.focoFechaFin = false;
     this.modalAbierto = true;
