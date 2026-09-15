@@ -89,7 +89,7 @@
 <div class="board">
   @for (col of columnas; track col) {
     <div class="col">
-        <div class="col-head" [style.border-color]="columnaColor[col]">
+        <div class="col-head" [style.background]="columnaColor[col]">
         <span class="dot" [style.background]="columnaColor[col]"></span>
         <span class="col-title">{{ col }}</span>
         <span class="col-count">{{ columna(col).length }}</span>

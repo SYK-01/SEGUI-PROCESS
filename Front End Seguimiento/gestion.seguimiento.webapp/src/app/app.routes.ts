@@ -8,7 +8,7 @@ export const routes: Routes = [
   },
   {
     path: 'pages',
-    canActivate: [authGuard],
+     canActivate: [authGuard],
     loadChildren: () => import('./components/pages/pages.routes').then(r => r.PAGES_ROUTES)
   },
   { path: '', redirectTo: 'pages/tablero', pathMatch: 'full' },
