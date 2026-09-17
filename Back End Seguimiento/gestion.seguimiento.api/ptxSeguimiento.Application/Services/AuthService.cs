@@ -19,26 +19,32 @@ namespace ptxSeguimiento.Application.Services
         }
 
         public async Task<LoginResponse> Login(string Nom_Usuario, string Pwd_Usuario)
-        {
-            var usuario = await _usuariosRepository.ObtenerPorNombreUsuario(Nom_Usuario);
+   {
+    var usuario = await _usuariosRepository.ObtenerPorNombreUsuario(Nom_Usuario);
 
-            //if (usuario is null || string.IsNullOrEmpty(usuario.Pwd_Hash) ||
-            //    !BCrypt.Net.BCrypt.Verify(Pwd_Usuario, usuario.Pwd_Hash))
-            //{
-            //    return new LoginResponse { Codigo = 0, Mensaje = "Usuario o contraseña incorrectos." };
-            //}
+    if (usuario is null || string.IsNullOrEmpty(usuario.Pwd_Hash))
+        return new LoginResponse { Codigo = 0, Mensaje = "Usuario o contraseña incorrectos." };
 
-            if (string.IsNullOrEmpty(usuario.Pwd_Hash) || usuario.Pwd_Hash.ToUpperInvariant() != Pwd_Usuario.ToUpperInvariant())
-            {
-                return new LoginResponse { Codigo = 0, Mensaje = "La contraseña ingresada es incorrecta." };
-            }
+    bool isValid;
 
-            var respuesta = _mapper.Map<LoginResponse>(usuario);
-            respuesta.Codigo = 1;
-            respuesta.Mensaje = "Inicio de sesión correcto.";
-            respuesta.Token = _jwtService.GenerarToken(usuario);
+    if (usuario.Pwd_Hash.StartsWith("$2"))
+    {
+        isValid = BCrypt.Net.BCrypt.Verify(Pwd_Usuario, usuario.Pwd_Hash);
+    }
+    else
+    {
+        isValid = usuario.Pwd_Hash.ToUpperInvariant() == Pwd_Usuario.ToUpperInvariant();
+    }
 
-            return respuesta;
-        }
+    if (!isValid)
+        return new LoginResponse { Codigo = 0, Mensaje = "La contraseña ingresada es incorrecta." };
+
+    var respuesta = _mapper.Map<LoginResponse>(usuario);
+    respuesta.Codigo = 1;
+    respuesta.Mensaje = "Inicio de sesión correcto.";
+    respuesta.Token = _jwtService.GenerarToken(usuario);
+
+    return respuesta;
+     }
     }
 }

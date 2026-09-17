@@ -40,10 +40,54 @@
       <div class="panel-title">Tickets por sistema y tipo</div>
       <div class="chart-wrap"><canvas #chartSistema></canvas></div>
     </mat-card>
-    <mat-card class="panel">
-      <div class="panel-title">Distribución por columna</div>
-      <div class="chart-wrap"><canvas #chartEstado></canvas></div>
-    </mat-card>
+    <div class="section estado-section">
+      <div class="section-title">Distribución por columna</div>
+      <div class="ring-layout">
+        <div class="ring-chart">
+          <svg viewBox="0 0 200 200">
+            @for (d of distribucion; track d.col; let i = $index) {
+              <circle
+                cx="100" cy="100" r="80"
+                fill="none"
+                [attr.stroke]="d.color"
+                [attr.stroke-width]="activeIndex === i ? 18 : 14"
+                stroke-linecap="round"
+                [attr.stroke-dasharray]="d.dashArray"
+                [attr.stroke-dashoffset]="d.dashOffset"
+                transform="rotate(-90 100 100)"
+                [class.ring-segment]="true"
+                [class.ring-active]="activeIndex === i"
+                [class.ring-dimmed]="activeIndex !== null && activeIndex !== i"
+                (mouseenter)="activeIndex = i"
+                (mouseleave)="activeIndex = null"
+                style="cursor: pointer; transition: stroke-width 0.3s, opacity 0.3s;"
+              />
+            }
+            <text x="100" y="88" text-anchor="middle" class="ring-total">
+              {{ activeIndex !== null ? distribucion[activeIndex].cantidad : totalTicketsDist }}
+            </text>
+            <text x="100" y="108" text-anchor="middle" class="ring-label">
+              {{ activeIndex !== null ? distribucion[activeIndex].col : 'tickets' }}
+            </text>
+          </svg>
+        </div>
+        <div class="ring-legend">
+          @for (d of distribucion; track d.col; let i = $index) {
+            <div class="ring-legend-item"
+              [class.ring-legend-active]="activeIndex === i"
+              [class.ring-legend-dimmed]="activeIndex !== null && activeIndex !== i"
+              (mouseenter)="activeIndex = i"
+              (mouseleave)="activeIndex = null">
+              <div class="ring-dot" [style.background]="d.color"></div>
+              <div class="ring-legend-info">
+                <span class="ring-legend-name">{{ d.col }}</span>
+                <span class="ring-legend-value">{{ d.cantidad }} <span class="ring-legend-pct">({{ d.pct }}%)</span></span>
+              </div>
+            </div>
+          }
+        </div>  
+    </div>
+    </div>
   </div>
 
   <mat-card class="panel">
@@ -51,10 +95,31 @@
     <div class="chart-wrap chart-wrap-lg"><canvas #chartSistemaEstado></canvas></div>
   </mat-card>
 
-  <mat-card class="panel">
-    <div class="panel-title">Carga de trabajo por responsable (tickets aún no cerrados)</div>
-    <div class="chart-wrap chart-wrap-lg"><canvas #chartResponsable></canvas></div>
-  </mat-card>
+ <div class="section">
+  <div class="section-title">Carga por responsable</div>
+  <div class="responsable-list">
+    @for (r of responsablesSorted; track r.Nom_Miembro) {
+      <div class="responsable-row">
+        <div class="responsable-avatar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="5"/>
+            <path d="M20 21a8 8 0 0 0-16 0"/>
+          </svg>
+        </div>
+        <div class="responsable-info">
+          <div class="responsable-name">{{ r.Nom_Miembro }}</div>
+          <div class="responsable-bar-wrap">
+            <div class="responsable-bar" [style.width.%]="(r.Tickets_Activos / maxTickets) * 100"></div>
+          </div>
+        </div>
+        <div class="responsable-count">
+        <span class="responsable-count-number">{{ r.Tickets_Activos }}</span>
+        <span class="responsable-count-label">tickets</span>
+      </div>
+      </div>
+    }
+  </div>
+</div>
 } @else {
   <div class="cargando">
     <mat-progress-spinner mode="indeterminate" diameter="32"></mat-progress-spinner>

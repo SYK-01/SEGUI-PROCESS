@@ -28,8 +28,20 @@ export class ImprimirComponent implements OnInit {
   sistemas: Sistema[] = [];
   tickets: Ticket[] = [];
   cargando = true;
+    
+   
 
   fechaGeneracion = new Date();
+
+  expandedCols = new Set<string>();
+
+  toggleCol(col: string): void {
+  if (this.expandedCols.has(col)) {
+    this.expandedCols.delete(col);
+  } else {
+    this.expandedCols.add(col);
+  }
+}
 
   constructor(
     private sistemasService: SistemasService,

@@ -133,17 +133,15 @@ html {
 }
 
 .metric-activos .metric-icon {
-  background: rgba(79, 99, 210, 0.12) !important;
   color: #4F63D2 !important;
+
 }
 
 .metric-incidentes .metric-icon {
-  background: rgba(220, 53, 69, 0.1) !important;
   color: #dc3545 !important;
 }
 
 .metric-cerrados .metric-icon {
-  background: rgba(40, 167, 69, 0.1) !important;
   color: #28a745 !important;
 }
 

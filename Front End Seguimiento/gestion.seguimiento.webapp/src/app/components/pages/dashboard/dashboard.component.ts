@@ -77,8 +77,12 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   /** Tabla cruzada sistema × columna, calculada en construirCrossTab(). */
   crossTab: FilaSistemaEstado[] = [];
-
+  responsablesSorted: any[] = [];
+  maxTickets = 0;
+  distribucion: { col: string; cantidad: number; pct: number; color: string; dashArray: string; dashOffset: number }[] = [];
+  totalTicketsDist = 0;
   private charts: Chart[] = [];
+  activeIndex: number | null = null;
 
   constructor(
     private dashboardService: DashboardService,
@@ -113,6 +117,50 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
         // un setTimeout(0) no lo garantiza y dejaba el dashboard en blanco.
         this.cdr.detectChanges();
         this.renderCharts();
+        this.responsablesSorted = [...this.resumen.PorResponsable]
+        .sort((a, b) => b.Tickets_Activos - a.Tickets_Activos);
+      this.maxTickets = this.responsablesSorted.length
+        ? this.responsablesSorted[0].Tickets_Activos
+        : 1;
+        const coloresDistribucion: Record<string, string> = {
+          'Pendiente': '#f97066',
+          'Programado': '#818cf8',
+          'En Proceso': '#fb923c',
+          'Cerrado': '#34d399'
+        };
+
+        const porColumna = COLUMNAS.map(col => {
+          const cantidad = this.resumen!.PorEstado
+            .filter(d => ESTADO_A_COLUMNA[d.Estado as EstadoReal] === col)
+            .reduce((acc, d) => acc + d.Cantidad, 0);
+          return { col, cantidad };
+        }).filter(d => d.cantidad > 0);
+
+        const totalDist = porColumna.reduce((acc, d) => acc + d.cantidad, 0);
+        this.totalTicketsDist = totalDist;
+
+        const circumference = 2 * Math.PI * 80;
+        const gap = 8;
+        const totalGaps = gap * porColumna.length;
+        const usable = circumference - totalGaps;
+        let offset = 0;
+
+        this.distribucion = porColumna.map(d => {
+          const pct = Math.round((d.cantidad / totalDist) * 1000) / 10;
+          const segmentLength = (d.cantidad / totalDist) * usable;
+          const dashArray = `${segmentLength} ${circumference - segmentLength}`;
+          const dashOffset = -offset;
+          offset += segmentLength + gap;
+
+          return {
+            col: d.col,
+            cantidad: d.cantidad,
+            pct,
+            color: coloresDistribucion[d.col] || '#888',
+            dashArray,
+            dashOffset
+          };
+        });
       }
     });
   }
@@ -143,29 +191,47 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
     if (!this.resumen) return;
 
-    if (this.chartSistemaRef) {
-      // Los 4 tipos reales del formulario (antes solo se leían 2: Requerimiento
-      // e Incidente; Solicitud y Reunión desaparecían del gráfico aunque el
-      // procedimiento almacenado ya los devolvía).
+        if (this.chartSistemaRef) {
       const config: ChartConfiguration = {
         type: 'bar',
         data: {
           labels: this.resumen.PorSistema.map(p => p.Cod_Corto),
           datasets: [
-            { label: 'Requerimiento', data: this.resumen.PorSistema.map(p => p.Cant_Requerimiento), backgroundColor: '#4F63D2', stack: 'a' },
-            { label: 'Incidencia', data: this.resumen.PorSistema.map(p => p.Cant_Incidente), backgroundColor: '#DC2626', stack: 'a' },
-            { label: 'Solicitud', data: this.resumen.PorSistema.map(p => p.Cant_Solicitud), backgroundColor: '#0F9F8B', stack: 'a' },
-            { label: 'Reunión', data: this.resumen.PorSistema.map(p => p.Cant_Reunion), backgroundColor: '#8A6BCE', stack: 'a' }
-          ]
+            { label: 'Requerimiento', data: this.resumen.PorSistema.map(p => p.Cant_Requerimiento), backgroundColor: '#6366f1', borderRadius: 6, barPercentage: 0.5, categoryPercentage: 0.6, stack: 'a' },
+            { label: 'Incidencia', data: this.resumen.PorSistema.map(p => p.Cant_Incidente), backgroundColor: '#f87171', borderRadius: 6, barPercentage: 0.5, categoryPercentage: 0.6, stack: 'a' },
+            { label: 'Solicitud', data: this.resumen.PorSistema.map(p => p.Cant_Solicitud), backgroundColor: '#34d399', borderRadius: 6, barPercentage: 0.5, categoryPercentage: 0.6, stack: 'a' },
+            { label: 'Reunión', data: this.resumen.PorSistema.map(p => p.Cant_Reunion), backgroundColor: '#a78bfa', borderRadius: 6, barPercentage: 0.5, categoryPercentage: 0.6, stack: 'a' }
+          ] 
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          
           scales: {
-            x: { ticks: { color: '#565D6C' }, grid: { display: false } },
-            y: { ticks: { color: '#565D6C', precision: 0 }, grid: { color: '#E2E4EA' } }
+            x: {
+              ticks: { color: '#aaa', font: { size: 11 } },
+              grid: { display: false },
+              border: { display: false }
+            },
+            y: {
+              ticks: { color: '#aaa', font: { size: 11 }, precision: 0 },
+              grid: { color: '#f5f5f5' },
+              border: { display: false }
+            }
           },
-          plugins: { legend: { labels: { color: '#1A1D24' } } }
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: {
+                color: '#888',
+                font: { size: 11 },
+                usePointStyle: true,
+                pointStyle: 'circle',
+                padding: 16
+              }
+            }
+          }
         }
       };
       this.charts.push(new Chart(this.chartSistemaRef.nativeElement, config));
@@ -192,13 +258,26 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
         type: 'doughnut',
         data: {
           labels: porColumna.map(d => d.col),
-          datasets: [{ data: porColumna.map(d => d.cantidad), backgroundColor: porColumna.map(d => COLUMNA_COLOR_HEX[d.col]) }]
+          datasets: [{
+            data: porColumna.map(d => d.cantidad),
+            backgroundColor: ['#f97066', '#818cf8', '#fb923c', '#34d399'],
+            borderWidth: 0
+          }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'bottom', labels: { color: '#1A1D24' } },
+            legend: {
+            position: 'bottom',
+            labels: {
+              color: '#888',
+              font: { size: 11 },
+              usePointStyle: true,
+              pointStyle: 'circle',
+              padding: 16
+            }
+          },
             tooltip: {
               callbacks: {
                 label: (ctx) => {
@@ -240,56 +319,69 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       this.charts.push(new Chart(this.chartResponsableRef.nativeElement, config));
     }
 
-    if (this.chartSistemaEstadoRef && this.crossTab.length) {
-      // Barra horizontal apilada al 100%: un segmento por columna, con el
-      // mismo color que usa el tablero (COLUMNA_COLOR_HEX). El valor de cada
-      // dataset ya viene en porcentaje sobre el total de ese sistema, para
-      // que las 4 columnas siempre sumen 100 y así se comparan sistemas con
-      // distinta cantidad de tickets de un vistazo. El detalle en cantidades
-      // reales queda en el tooltip.
-      const config: ChartConfiguration = {
-        type: 'bar',
-        data: {
-          labels: this.crossTab.map(f => f.corto),
-          datasets: COLUMNAS.map(col => ({
-            label: col,
-            data: this.crossTab.map(f => f.total ? Math.round((f.porColumna[col] / f.total) * 1000) / 10 : 0),
-            backgroundColor: COLUMNA_COLOR_HEX[col],
-            stack: 'a'
-          }))
+  if (this.chartSistemaEstadoRef && this.crossTab.length) {
+  const config: ChartConfiguration = {
+    type: 'bar',
+    data: {
+      labels: this.crossTab.map(f => f.corto),
+      datasets: COLUMNAS.map(col => ({
+      label: col,
+      data: this.crossTab.map(f => f.total ? Math.round((f.porColumna[col] / f.total) * 1000) / 10 : 0),
+      backgroundColor: COLUMNA_COLOR_HEX[col],
+      borderRadius: 6,
+      borderSkipped: false,
+      barPercentage: 0.7,
+      categoryPercentage: 0.8,
+      stack: 'a'
+    } as any))
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          stacked: true,
+          min: 0,
+          max: 100,
+          ticks: { color: '#aaa', font: { size: 11 }, callback: (v) => `${v}%` },
+          grid: { color: '#f5f5f5' },
+          border: { display: false }
         },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              stacked: true,
-              min: 0,
-              max: 100,
-              ticks: { color: '#565D6C', callback: (v) => `${v}%` },
-              grid: { color: '#E2E4EA' }
-            },
-            y: { stacked: true, ticks: { color: '#565D6C' }, grid: { display: false } }
-          },
-          plugins: {
-            legend: { position: 'bottom', labels: { color: '#1A1D24' } },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => {
-                  const fila = this.crossTab[ctx.dataIndex];
-                  const col = ctx.dataset.label as Columna;
-                  return `${col}: ${fila.porColumna[col]} tickets (${ctx.parsed.x}%)`;
-                }
-              }
-            }
+        y: {
+          stacked: true,
+          ticks: { color: '#aaa', font: { size: 11 } },
+          grid: { display: false },
+          border: { display: false }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#888',
+            font: { size: 11 },
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 16
           }
         },
-        plugins: [porcentajeEnBarraPlugin]
-      };
-      this.charts.push(new Chart(this.chartSistemaEstadoRef.nativeElement, config));
-    }
-  }
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const fila = this.crossTab[ctx.dataIndex];
+              const col = ctx.dataset.label as Columna;
+              return `${col}: ${fila.porColumna[col]} tickets (${ctx.parsed.x}%)`;
+            }
+          }
+        }
+      }
+    },
+    plugins: [porcentajeEnBarraPlugin]
+  };
+  this.charts.push(new Chart(this.chartSistemaEstadoRef.nativeElement, config));
+} 
+}
 
   /**
    * Exporta el Dashboard a un Excel real (.xlsx, no CSV) con una hoja por

@@ -6,16 +6,16 @@
 
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   gap: 8px;
   padding: 20px 32px 0;
   height: auto;
   position: relative;
-  transition: box-shadow 0.3s ease;
 }
+
 
 .brand {
   width: 100%;
@@ -24,8 +24,8 @@
   align-items: center;
   gap: 0;
   margin: 0;
+  position: relative;
 }
-
 
 .brand-mark {
   display: none;
@@ -111,36 +111,41 @@
   padding: 24px 28px;
 }
 
+/* BOTTOm LOGIN */
 button[mat-button] {
   position: absolute;
   right: 32px;
   top: 20px;
 }
-
 /* --- Responsive ---
    El toolbar (marca + nav + usuario) es lo primero que se queda sin espacio
    en pantallas angostas. Por pasos: primero se esconde el subtítulo y el
    texto de cada botón del menú (quedan solo los íconos, con tooltip); en
    celular además se esconde el nombre de usuario (queda el ícono) y se
    reduce el padding del contenido para no desperdiciar ancho. */
+/* --- Responsive --- */
+
+/* Tablet */
 @media (max-width: 900px) {
   .eyebrow { display: none; }
   .nav-item-label { display: none; }
   .nav-item { padding: 7px 10px; }
   .content { padding: 18px 14px; }
+  .title { font-size: 1.8rem; }
 }
 
+/* Mobile */
 @media (max-width: 600px) {
-  .toolbar { gap: 8px; padding: 0 8px; }
-  .brand-text .title { font-size: 13px; }
+  .toolbar { gap: 4px; padding: 8px 12px; }
+  .title { font-size: 1.2rem; letter-spacing: -0.5px; }
+  .nav { gap: 4px; padding: 3px; margin-bottom: 8px; }
+  .nav-item { padding: 6px 8px; font-size: 12px; }
+  .nav-item mat-icon { font-size: 16px; width: 16px; height: 16px; }
   .user-label { display: none; }
-  .content { padding: 14px 10px; }
-}
+  .content { padding: 12px 8px; }
 
-/* Al imprimir (vista de impresión del tablero) solo debe salir la hoja, no
-   el menú ni la barra superior de la SPA. */
-@media print {
-  .toolbar { display: none !important; }
-  .shell { background: #fff; min-height: 0; }
-  .content { padding: 0; }
+  button[mat-button] {
+    right: 12px;
+    top: 10px;
+  }
 }

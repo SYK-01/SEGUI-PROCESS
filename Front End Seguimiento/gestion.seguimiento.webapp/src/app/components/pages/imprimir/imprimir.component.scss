@@ -1,105 +1,246 @@
 :host {
   display: block;
-  color: var(--text);
+  color: #1a1d24;
 }
 
+.dot { display: none; }
+
+.col-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1d24;
+  flex: 1;
+}
+
+.col-count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 999px;
+  color: #000000;
+  margin-left: auto;
+}
+
+.acc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1d24;
+  background: none;
+  transition: color 0.2s, transform 0.25s;
+  flex-shrink: 0;
+}
+
+.acc-toggle:hover {
+  color: #000;
+}
+
+.acc-open .acc-toggle {
+  transform: rotate(45deg);
+  color: #dc2626;
+}
+
+/* ─── Explainer ─── */
 .explainer {
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  background: var(--accent-wash);
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  border-radius: 10px;
-  padding: 10px 14px;
+  background: #f0f0ff;
+  border: 1px solid #e0e0ff;
+  border-radius: 12px;
+  padding: 12px 16px;
   margin-bottom: 16px;
   font-size: 12.5px;
-  color: var(--text-2);
+  color: #555;
   line-height: 1.5;
 }
-.explainer b { color: var(--text); }
+.explainer b { color: #1a1d24; }
 .explainer .ico { flex: none; }
 
 .pantalla-solo {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .empty {
   font-size: 13px;
-  color: var(--text-mute);
+  color: #aaa;
   padding: 12px 0;
 }
 
+/* ─── Hoja ─── */
 .hoja {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 24px;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .hoja-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 12px;
-  margin-bottom: 20px;
-}
-.titulo-hoja { font-size: 16px; font-weight: 700; color: var(--text); }
-.fecha-hoja { font-size: 11px; color: var(--text-mute); }
-
-.bloque-col {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 14px;
   margin-bottom: 24px;
+}
+
+.titulo-hoja {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1a1d24;
+}
+
+.fecha-hoja {
+  font-size: 0.7rem;
+  color: #aaa;
+  font-weight: 500;
+}
+
+/* ─── Bloque por columna ─── */
+.bloque-col {
+  margin-bottom: 12px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 0;
+  border: 1px solid #eee;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.3s;
+}
+
+.bloque-col:hover {
+  border-color: #ddd;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
 }
 
 .col-head {
   display: flex;
   align-items: center;
-  gap: 8px;
-  border-left: 4px solid;
-  padding: 4px 0 4px 10px;
-  margin-bottom: 8px;
+  gap: 12px;
+  padding: 16px 20px;
+  margin-bottom: 0;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
 }
-.dot { width: 8px; height: 8px; border-radius: 50%; }
-.col-title { font-size: 13px; font-weight: 700; color: var(--text); }
-.col-count { font-size: 11px; color: var(--text-mute); margin-left: auto; }
+  
+.col-head:hover {
+  background: #f8f8fa;
+}
 
-/* En pantalla (no al imprimir) la tabla puede tener más columnas de las que
-   caben en un celular; que se desplace horizontalmente ella sola en vez de
-   forzar scroll horizontal a toda la página. */
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.col-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1a1d24;
+}
+
+.col-count {
+  font-size: 0.75rem;
+  color: #020303;
+  font-weight: 700;
+  margin-left: auto;
+  background: #f0f0ff;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+/* ─── Tabla ─── */
 .tabla-scroll {
   overflow-x: auto;
+  padding: 0 20px 16px;
+  border-top: 1px solid #f0f0f0;
+  animation: fadeUp 0.25s ease;
 }
 
 .tabla-imprimir {
   width: 100%;
-  /* Ahora trae todos los campos del ticket (descripción, estado detallado,
-     las 4 fechas) — más ancha, por eso el mínimo sube y depende más del
-     scroll horizontal propio (.tabla-scroll) en pantalla. */
   min-width: 1100px;
-  border-collapse: collapse;
-  font-size: 11.5px;
-}
-.tabla-imprimir td { max-width: 220px; }
-.tabla-imprimir th {
-  text-align: left;
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: .03em;
-  color: var(--text-mute);
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--border);
-}
-.tabla-imprimir td {
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
 }
 
-/* Al imprimir: solo la hoja, fondo blanco puro (nada de la interfaz de la
-   SPA ni el botón "Imprimir"). El menú/toolbar se oculta desde
-   menu.component.css. */
+.tabla-imprimir th {
+  text-align: left;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #aaa;
+  font-weight: 700;
+  padding: 8px 10px;
+  border-bottom: 2px solid #eee;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tabla-imprimir td {
+  padding: 10px 10px;
+  color: #333;
+  border-bottom: 1px solid #f5f5f5;
+  max-width: 220px;
+  vertical-align: top;
+  font-size: 0.8rem;
+}
+
+/* Zebra striping */
+.tabla-imprimir tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* Hover highlight */
+.tabla-imprimir tbody tr {
+  transition: background 0.15s;
+}
+
+.tabla-imprimir tbody tr:hover {
+  background: #f0f0ff;
+}
+
+
+/* ─── Col head clickable ─── */
+.col-head {
+  cursor: pointer;
+  user-select: none;
+  transition: filter 0.2s, box-shadow 0.2s;
+}
+
+.col-head:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.col-head .acc-toggle {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+}
+
+.col-head .col-count {
+  margin-left: 0;
+}
+
+/* ─── Tabla expand animation ─── */
+.tabla-scroll {
+  animation: fadeUp 0.25s ease;
+}
+
+.print-only { display: none; }
+
+/* ─── Print ─── */
 @media print {
   .no-print { display: none !important; }
+  .print-only { display: block !important; }
 
   .hoja {
     background: #fff;
@@ -107,18 +248,59 @@
     border: none;
     border-radius: 0;
     padding: 0;
+    box-shadow: none;
   }
+
+  .bloque-col {
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .col-count {
+    background: none;
+    color: #444;
+    padding: 0;
+  }
+
   .hoja-head { border-bottom-color: #000; }
   .fecha-hoja { color: #444; }
-  .col-count { color: #444; }
   .tabla-scroll { overflow-x: visible; }
-  .tabla-imprimir { min-width: 0; }
-  .tabla-imprimir th { color: #333; border-bottom-color: #999; }
-  .tabla-imprimir td { border-bottom-color: #ccc; color: #000; }
-  .bloque-col { break-inside: avoid; page-break-inside: avoid; }
+  .tabla-imprimir {
+  min-width: 0;
+  width: 100%;
+  table-layout: fixed;
+  font-size: 8px;
 }
 
-@media (max-width: 600px) {
-  .hoja { padding: 14px; }
-  .hoja-head { flex-direction: column; align-items: flex-start; gap: 2px; }
+.tabla-imprimir th {
+  font-size: 7px;
+  padding: 4px 3px;
+  word-wrap: break-word;
 }
+
+.tabla-imprimir td {
+  padding: 4px 3px;
+  font-size: 8px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+  .tabla-imprimir th { color: #333; border-bottom-color: #999; background: #fff; position: static; }
+  .tabla-imprimir td { border-bottom-color: #ccc; color: #000; }
+  .tabla-imprimir tbody tr:nth-child(even) { background: #fff; }
+  .tabla-imprimir tbody tr:hover { background: #fff; }
+  .bloque-col { break-inside: avoid; page-break-inside: avoid; }
+  
+@media (max-width: 600px) {
+  .hoja { padding: 14px 12px; }
+  .hoja-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .bloque-col { padding: 12px; }
+}
+
+
+}
+
+
+
+
