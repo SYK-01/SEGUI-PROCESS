@@ -22,12 +22,12 @@ export const httpErrorInterceptor: HttpInterceptorFn = (
       } else {
         console.error('Error del servidor:', error);
 
-        /*if (error.status === 401) {
+        if (error.status === 401) {
          localStorage.clear();
           router.navigate(['/', 'auth', 'login']);
          errorMessage = error.error?.mensaje || 'No autorizado, por favor inicia sesión nuevamente.';
           return throwError(() => error);
-        } else */if (error.status === 0) {
+        } else if (error.status === 0) {
           errorMessage = 'No hay respuesta del servidor. Verifica tu conexión.';
         } else if (error.error?.mensaje) {
           errorMessage = error.error.mensaje;
