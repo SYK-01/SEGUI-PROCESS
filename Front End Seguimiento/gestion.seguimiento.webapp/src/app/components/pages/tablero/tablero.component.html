@@ -1,44 +1,66 @@
-<div class="explainer">
-  <span class="ico">💡</span>
-  <span>
-    <b>Cómo leer el tablero:</b> son 4 columnas. La columna <b>Cerrado</b> agrupa las 3 etapas finales
-    del proceso real (validación funcional → aprobación del usuario → entregado); cada tarjeta muestra
-    en cuál va. Al mover una tarjeta a Cerrado, el ticket se cierra por completo; si le falta la
-    <b>fecha fin</b>, no se deja cerrar hasta completarla.
-  </span>
-</div>
+
 
 <div class="metrics-mini">
-  <div class="metric-mini metric-activos">
-    <div class="metric-icon">
-      <mat-icon>assignment</mat-icon>
+  <div class="metric-ring metric-activos">
+    <svg viewBox="0 0 120 120">
+      <circle class="ring-bg" cx="60" cy="60" r="50"/>
+      <circle class="ring-fill" cx="60" cy="60" r="50"
+        [style.stroke-dashoffset]="314 - (314 * (totalActivos / totalGeneral))"
+      />
+    </svg>
+    <div class="ring-content">
+      <div class="ring-val">{{ totalActivos }}</div>
+      <div class="ring-pct">{{ totalGeneral ? ((totalActivos / totalGeneral) * 100 | number:'1.0-0') : 0 }}%</div>
     </div>
-    <div class="metric-info">
-      <div class="val">{{ totalActivos }}</div>
-      <div class="lbl">Activos</div>
-    </div>
+    <div class="ring-label">Activos</div>
   </div>
 
-  <div class="metric-mini metric-incidentes">
-    <div class="metric-icon">
-      <mat-icon>warning</mat-icon>
+  <div class="metric-ring metric-incidentes">
+    <svg viewBox="0 0 120 120">
+      <circle class="ring-bg" cx="60" cy="60" r="50"/>
+      <circle class="ring-fill" cx="60" cy="60" r="50"
+        [style.stroke-dashoffset]="314 - (314 * (totalIncidentesAbiertos / totalGeneral))"
+      />
+    </svg>
+    <div class="ring-content">
+      <div class="ring-val">{{ totalIncidentesAbiertos }}</div>
+      <div class="ring-pct">{{ totalGeneral ? ((totalIncidentesAbiertos / totalGeneral) * 100 | number:'1.0-0') : 0 }}%</div>
     </div>
-    <div class="metric-info">
-      <div class="val">{{ totalIncidentesAbiertos }}</div>
-      <div class="lbl">Incidentes abiertos</div>
-    </div>
+    <div class="ring-label">Incidentes</div>
   </div>
 
-  <div class="metric-mini metric-cerrados">
-    <div class="metric-icon">
-      <mat-icon>check_circle</mat-icon>
+  <div class="metric-ring metric-cerrados">
+    <svg viewBox="0 0 120 120">
+      <circle class="ring-bg" cx="60" cy="60" r="50"/>
+      <circle class="ring-fill" cx="60" cy="60" r="50"
+        [style.stroke-dashoffset]="314 - (314 * (totalResueltos / totalGeneral))"
+      />
+    </svg>
+    <div class="ring-content">
+      <div class="ring-val">{{ totalResueltos }}</div>
+      <div class="ring-pct">{{ totalGeneral ? ((totalResueltos / totalGeneral) * 100 | number:'1.0-0') : 0 }}%</div>
     </div>
-    <div class="metric-info">
-      <div class="val">{{ totalResueltos }}</div>
-      <div class="lbl">Cerrados</div>
-    </div>
+    <div class="ring-label">Cerrados</div>
   </div>
 </div>
+
+ <svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="grad-activos" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="grad-incidentes" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fca5a5"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <linearGradient id="grad-cerrados" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 
   <div class="carga">
     @for (c of cargaPorSistema(); track c.sistema.Cod_Sistema) {

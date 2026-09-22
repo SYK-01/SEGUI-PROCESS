@@ -37,20 +37,114 @@
   margin-bottom: 6px;
 }
 
+
 .metrics-mini {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0,1fr));
-  gap: 12px;
-  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-bottom: 24px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+  border-radius: 0;
 }
-.metric-mini {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 14px;
+
+.metric-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
-.metric-mini .val { font-size: 20px; font-weight: 700; }
-.metric-mini .lbl { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+
+.metric-ring svg {
+  width: 130px;
+  height: 130px;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.2));
+}
+
+.ring-bg {
+  fill: none;
+  stroke: #f0f0f0;
+  stroke-width: 8;
+}
+
+.ring-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 314;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.metric-activos .ring-fill {
+  stroke: url(#grad-activos);
+}
+
+.metric-incidentes .ring-fill {
+  stroke: url(#grad-incidentes);
+}
+
+.metric-cerrados .ring-fill {
+  stroke: url(#grad-cerrados);
+}
+
+.ring-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-val {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #1a1d24;
+  line-height: 1;
+}
+
+.ring-pct {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #999;
+  margin-top: 2px;
+}
+
+.ring-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 10px;
+}
+
+.metric-activos .ring-val { color: #4f46e5; }
+.metric-incidentes .ring-val { color: #dc2626; }
+.metric-cerrados .ring-val { color: #059669; }
+
+.metric-ring:hover svg {
+  filter: drop-shadow(0 0 16px rgba(79, 70, 229, 0.35));
+}
+
+.metric-incidentes:hover svg {
+  filter: drop-shadow(0 0 16px rgba(220, 38, 38, 0.35));
+}
+
+.metric-cerrados:hover svg {
+  filter: drop-shadow(0 0 16px rgba(5, 150, 105, 0.35));
+}
+
 
 .carga {
   display: flex;
@@ -186,7 +280,7 @@
   padding: 8px 16px;
   background: #000;
   border: none;
-  border-radius: 999px;
+  border-radius: 999px !important;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -357,19 +451,17 @@
 }
 
 
+
 @media (max-width: 900px) {
-  .board { grid-template-columns: 1fr 1fr; }
-  .metrics-mini { grid-template-columns: 1fr 1fr; }
+  .metrics-mini { flex-wrap: wrap; }
+  .metric-mini { flex: 1 1 45%; }
 }
 
 @media (max-width: 600px) {
-  .board { grid-template-columns: 1fr; }
-  .metrics-mini { grid-template-columns: 1fr 1fr; }
-  .filtro { width: 100%; }
-  .row2 { flex-direction: column; }
-  .modal { padding: 16px; }
+  .metrics-mini { flex-direction: column; }
+  .metric-mini { border-right: none; border-bottom: 1px solid #f0f0f0; }
+  .metric-mini:last-child { border-bottom: none; }
 }
-
 
 .mat-datepicker-content {
   background-color: #ffff !important;
@@ -395,7 +487,14 @@
 
 
 
-
+.metrics-mini,
+.metrics-mini .metric-ring {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
 
 
 

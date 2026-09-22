@@ -297,7 +297,20 @@ html {
 }
 
 
+/* Errores*/
+.swal2-container.swal2-bottom-end {
+  top: 50% !important;
+  bottom: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translate(-50%, -50%) !important;
+}
 
-
-
-
+.swal2-container .swal2-popup {
+  margin: auto !important;
+  position: relative !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+}

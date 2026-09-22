@@ -54,6 +54,8 @@ interface EditingTicket {
   templateUrl: './tablero.component.html',
   styleUrls: ['./tablero.component.scss']
 })
+
+
 export class TableroComponent implements OnInit {
 
   columnas = COLUMNAS;
@@ -164,6 +166,10 @@ export class TableroComponent implements OnInit {
     return this.tickets.filter(t => this.columnaDe(t) === 'Cerrado').length;
   }
 
+  get totalGeneral(): number {
+  return (this.totalActivos || 0) + (this.totalIncidentesAbiertos || 0) + (this.totalResueltos || 0) || 1;
+  }
+
   cargaPorSistema(): { sistema: Sistema; n: number }[] {
     return this.sistemas.map(s => ({
       sistema: s,
@@ -178,6 +184,8 @@ export class TableroComponent implements OnInit {
   setSistemaActivo(cod: number): void {
     this.sistemaActivo = this.sistemaActivo === cod ? null : cod;
   }
+
+  
 
   /**
    * Exporta a un Excel real (.xlsx) lo que se está viendo en el tablero
