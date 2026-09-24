@@ -26,23 +26,91 @@
 }
 .spacer { flex: 1; }
 
+
 .tabla {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0;
 }
 
 .fila {
   display: grid;
-  grid-template-columns: minmax(0,1fr) minmax(0,1.4fr) minmax(0,.7fr) minmax(0,1.2fr) minmax(0,.8fr) auto;
+  grid-template-columns: 56px minmax(0, 1.5fr) minmax(0, 0.7fr) minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
   align-items: center;
-  gap: 8px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 13px;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px dashed #e0e0e0;
+  transition: background 0.2s;
 }
+
+.fila:last-child {
+  border-bottom: none;
+}
+
+.fila:hover {
+  background: #fafbff;
+}
+
+.fila-head {
+  background: transparent;
+  border-bottom: 2px dashed #ccc;
+  color: #999;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 20px;
+}
+
+.fila-head:hover {
+  background: transparent;
+}
+
+.fila.inactivo {
+  opacity: 0.45;
+} 
+
+
+/* Avatar */
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1a1d24;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Info: nombre + username */
+.col-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.info-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1d24;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-user {
+  font-size: 0.75rem;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 /* Usuario/nombre/integrante vinculado son texto libre (puede ser largo): que
    se corten con "…" en vez de ensanchar la fila y forzar scroll horizontal. */
@@ -66,23 +134,73 @@
   opacity: .55;
 }
 
+/* Rol pill */
 .rol-pill {
-  font-size: 10px;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 4px 12px;
   border-radius: 999px;
-  background: var(--surface-2);
-  color: var(--text-2);
+  background: #f0f0f0;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .rol-pill.admin {
-  background: var(--accent-wash);
-  color: var(--accent);
+  background: #e0e7ff;
+  color: #4f46e5;
 }
 
+
+
+/* Miembro */
+.col-miembro {
+  font-size: 0.85rem;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ 
+
+/* Estado con dot */
+.col-estado {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #999;
+}
+
+.estado-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+.estado-dot.activo {
+  background: #059669;
+  box-shadow: 0 0 6px rgba(5, 150, 105, 0.4);
+}
+
+
+
+/* Acciones */
 .col-acciones {
   display: flex;
   justify-content: flex-end;
+  gap: 0;
+}
+
+.col-acciones button {
+  color: #999;
+  transition: color 0.2s;
+}
+
+.col-acciones button:hover {
+  color: #1a1d24;
 }
 
 .empty {
@@ -144,57 +262,57 @@
   }
 }
 
+/* Modal inputs pill */
+.modal ::ng-deep .mat-mdc-text-field-wrapper {
+  border-radius: 999px !important;
+  padding: 0 16px !important;
+}
+
+.modal ::ng-deep .mdc-notched-outline__leading {
+  border-radius: 999px 0 0 999px !important;
+  width: 20px !important;
+}
+
+.modal ::ng-deep .mdc-notched-outline__trailing {
+  border-radius: 0 999px 999px 0 !important;
+}
+
+/* Botones modal pill */
+.modal-actions button {
+  border-radius: 999px !important;
+  min-width: 120px;
+  height: 40px;
+}
+
+/* Modal card redondeado */
+.modal {
+  border-radius: 24px !important;
+}
+
+
+
 @media (max-width: 900px) {
   .fila {
-    grid-template-columns: 1fr 1fr auto;
-    gap: 6px;
-    padding: 10px;
+    grid-template-columns: 42px 1fr auto;
+    gap: 12px;
+    padding: 12px 16px;
   }
-
-  .fila-head {
-    grid-template-columns: 1fr 1fr auto;
-  }
-
+  .fila-head { grid-template-columns: 42px 1fr auto; }
   .col-rol, .col-miembro, .col-estado { display: none; }
-  .fila-head .col-rol,
-  .fila-head .col-miembro,
-  .fila-head .col-estado { display: none; }
+  .fila-head .col-rol, .fila-head .col-miembro, .fila-head .col-estado { display: none; }
 }
+
+
 
 @media (max-width: 600px) {
   .fila {
-    grid-template-columns: 1fr auto;
-    gap: 4px;
-    padding: 10px 8px;
-  }
-
-  .fila-head {
-    grid-template-columns: 1fr auto;
-  }
-
-  .col-nombre, .col-rol, .col-miembro, .col-estado { display: none; }
-  .fila-head .col-nombre,
-  .fila-head .col-rol,
-  .fila-head .col-miembro,
-  .fila-head .col-estado { display: none; }
-
-  .col-acciones {
-    gap: 0;
-  }
-
-  .col-acciones button {
-    transform: scale(0.85);
-  }
-
-  .explainer {
-    font-size: 11px;
-    padding: 8px 10px;
-  }
-
-  .toolbar {
-    flex-wrap: wrap;
+    grid-template-columns: 36px 1fr auto;
     gap: 8px;
+    padding: 10px 12px;
   }
+  .fila-head { grid-template-columns: 36px 1fr auto; }
+  .avatar { width: 36px; height: 36px; font-size: 0.85rem; }
+  .info-name { font-size: 0.85rem; }
 }
 
 @media (max-width: 480px) {

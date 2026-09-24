@@ -166,9 +166,9 @@ export class TableroComponent implements OnInit {
     return this.tickets.filter(t => this.columnaDe(t) === 'Cerrado').length;
   }
 
-  get totalGeneral(): number {
-  return (this.totalActivos || 0) + (this.totalIncidentesAbiertos || 0) + (this.totalResueltos || 0) || 1;
-  }
+get totalGeneral(): number {
+  return this.tickets.length || 1;
+}
 
   cargaPorSistema(): { sistema: Sistema; n: number }[] {
     return this.sistemas.map(s => ({
@@ -294,26 +294,17 @@ export class TableroComponent implements OnInit {
   guardarTicket(): void {
     if (!this.editing) return;
 
-    if (!this.editing.Titulo?.trim()) {
-      this.toastError('El título es obligatorio.');
-      return;
-    }
-    if (!this.editing.Cod_Sistema) {
-      this.toastError('Selecciona un sistema.');
-      return;
-    }
-    if (SUBESTADOS_CERRADO.indexOf(this.editing.Estado) !== -1 && !this.editing.Fecha_Real_Final) {
-      this.toastError('Falta colocar la fecha fin para dejar el ticket en "Cerrado".');
-      this.focoFechaFin = true;
-      return;
-    }
+     /* Antes: los 3 if individuales */
+   
+     if (!this.validarCampos()) return;
+     this.guardando = true;
 
     this.guardando = true;
 
     this.ticketsService.mantenimiento({
       Accion: this.editing.Accion,
       Num_Ticket: this.editing.Num_Ticket ?? null,
-      Cod_Sistema: this.editing.Cod_Sistema,
+      Cod_Sistema: this.editing.Cod_Sistema!,
       Tipo: this.editing.Tipo,
       Titulo: this.editing.Titulo,
       Descripcion: this.editing.Descripcion,
@@ -436,4 +427,44 @@ export class TableroComponent implements OnInit {
   private toastError(mensaje: string): void {
     Swal.fire({ toast: true, position: 'bottom-end', icon: 'error', title: mensaje, showConfirmButton: false, timer: 3200 });
   }
+   
+  private validarCampos(): boolean {
+  if (!this.editing) return false;
+
+  const checks: { field: string; valido: boolean; msg: string }[] = [
+    { field: '.modal mat-form-field:has(mat-select[required])', valido: !!this.editing.Cod_Sistema, msg: 'Sistema es obligatorio.' },
+    { field: '.modal mat-form-field:has(input#input-titulo)', valido: !!this.editing.Titulo?.trim(), msg: 'El título es obligatorio.' },
+  ];
+
+  // Fecha fin solo si estado es Cerrado
+  if (SUBESTADOS_CERRADO.indexOf(this.editing.Estado) !== -1) {
+    checks.push({ field: '.modal mat-form-field:has(input#input-fecha-fin)', valido: !!this.editing.Fecha_Real_Final, msg: 'Falta la fecha fin para "Cerrado".' });
+    this.focoFechaFin = !this.editing.Fecha_Real_Final;
+  }
+
+  // Limpiar errores previos
+  document.querySelectorAll('.modal mat-form-field.ng-invalid').forEach(el => {
+    el.classList.remove('ng-invalid', 'ng-touched');
+  });
+
+  const fallos = checks.filter(c => !c.valido);
+  if (!fallos.length) return true;
+
+  // Marcar solo los que fallaron
+  fallos.forEach(f => {
+    const el = document.querySelector(f.field);
+    if (el) el.classList.add('ng-touched', 'ng-invalid');
+  });
+
+  this.toastError(fallos[0].msg);
+  setTimeout(() => {
+    const el = document.querySelector(fallos[0].field + ' input, ' + fallos[0].field + ' mat-select') as HTMLElement;
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.focus();
+    }
+  }, 300);
+
+  return false;
+}
 }

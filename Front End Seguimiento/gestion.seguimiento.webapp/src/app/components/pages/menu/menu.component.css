@@ -149,3 +149,10 @@ button[mat-button] {
     top: 10px;
   }
 }
+
+
+
+
+::ng-deep .mat-mdc-menu-item:hover {
+  background: #f5f5ff !important;
+}

@@ -290,7 +290,7 @@
   .tabla-imprimir td { border-bottom-color: #ccc; color: #000; }
   .tabla-imprimir tbody tr:nth-child(even) { background: #fff; }
   .tabla-imprimir tbody tr:hover { background: #fff; }
-  .bloque-col { break-inside: avoid; page-break-inside: avoid; }
+  .bloque-col { break-inside: auto; page-break-inside: auto; }
   
 @media (max-width: 600px) {
   .hoja { padding: 14px 12px; }

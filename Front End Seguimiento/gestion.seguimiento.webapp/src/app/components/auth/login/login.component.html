@@ -1,37 +1,30 @@
 <div class="login-wrap">
-  <mat-card class="login-card">
+  <mat-card class="login-card" (mousemove)="onMouseMove($event)" (mouseleave)="onMouseLeave($event)">
     <div class="login-header">
-      <div class="brand-mark">ST</div>
-      <h1>Seguimiento TI</h1>
-      <p>Requerimientos e incidencias · Precotex</p>
+    <h1>SEGUI <span class="ti">TI</span></h1>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="ingresar()">
-      <mat-form-field appearance="outline" class="full">
-        <mat-label>Usuario</mat-label>
-        <mat-icon matPrefix>person</mat-icon>
-        <input matInput formControlName="Nom_Usuario" autocomplete="username">
-      </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full">
-        <mat-label>Contraseña</mat-label>
-        <mat-icon matPrefix>lock</mat-icon>
-        <input matInput [type]="ocultarPassword ? 'password' : 'text'" formControlName="Pwd_Usuario" autocomplete="current-password">
-        <button mat-icon-button matSuffix type="button" (click)="ocultarPassword = !ocultarPassword" [attr.aria-label]="ocultarPassword ? 'Mostrar contraseña' : 'Ocultar contraseña'">
-          <mat-icon>{{ ocultarPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
+       <label class="field-label">Usuario</label>
+        <mat-form-field appearance="outline" class="full">
+        <input matInput formControlName="Nom_Usuario" autocomplete="username">
+        </mat-form-field>
+
+        <label class="field-label">Contraseña</label>
+        <mat-form-field appearance="outline" class="full">
+       <input matInput [type]="ocultarPassword ? 'password' : 'text'" formControlName="Pwd_Usuario" autocomplete="current-password">
       </mat-form-field>
 
       <button mat-flat-button class="full boton-ingresar" type="submit" [disabled]="cargando">
         @if (cargando) {
           <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
         } @else {
-          <ng-container>
-            <mat-icon>login</mat-icon>
-            <span>Ingresar</span>
-          </ng-container>
+          <span>Ingresar</span>
         }
       </button>
     </form>
   </mat-card>
 </div>
+
+

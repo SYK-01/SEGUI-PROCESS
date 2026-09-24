@@ -1,11 +1,4 @@
-<div class="explainer">
-  <span class="ico">🔒</span>
-  <span>
-    <b>Cuentas de acceso.</b> Vincula cada cuenta con un integrante del Equipo para que
-    esa persona solo vea y administre sus propios tickets. Sin vínculo (o con rol
-    <b>Admin</b>), la cuenta puede ver y administrar los tickets de todos.
-  </span>
-</div>
+
 
 <div class="toolbar">
   <div class="spacer"></div>
@@ -16,8 +9,8 @@
 
 <div class="tabla">
   <div class="fila fila-head">
-    <span class="col-usuario">Usuario</span>
-    <span class="col-nombre">Nombre completo</span>
+    <span class="col-avatar"></span>
+    <span class="col-info">Usuario</span>
     <span class="col-rol">Rol</span>
     <span class="col-miembro">Integrante vinculado</span>
     <span class="col-estado">Estado</span>
@@ -26,13 +19,21 @@
 
   @for (u of usuarios; track u.Cod_Usuario) {
     <div class="fila" [class.inactivo]="!u.Activo">
-      <span class="col-usuario">{{ u.Nom_Usuario }}</span>
-      <span class="col-nombre">{{ u.Nom_Completo }}</span>
+      <span class="col-avatar">
+        <div class="avatar">{{ (u.Nom_Completo || '?')[0].toUpperCase() }}</div>
+      </span>
+      <span class="col-info">
+        <span class="info-name">{{ u.Nom_Completo }}</span>
+        <span class="info-user">{{ u.Nom_Usuario }}</span>
+      </span>
       <span class="col-rol">
         <span class="rol-pill" [class.admin]="u.Rol === 'Admin'">{{ u.Rol }}</span>
       </span>
       <span class="col-miembro">{{ u.Nom_Miembro || 'Sin vincular' }}</span>
-      <span class="col-estado">{{ u.Activo ? 'Activo' : 'Inactivo' }}</span>
+      <span class="col-estado">
+        <span class="estado-dot" [class.activo]="u.Activo"></span>
+        {{ u.Activo ? 'Activo' : 'Inactivo' }}
+      </span>
       <span class="col-acciones">
         <button mat-icon-button (click)="abrirEditarUsuario(u)" matTooltip="Editar">
           <mat-icon>edit</mat-icon>

@@ -28,11 +28,26 @@ export class LoginComponent {
     Pwd_Usuario: ['', Validators.required]
   });
 
+
+  onMouseMove(e: MouseEvent): void {
+  const card = e.currentTarget as HTMLElement;
+  const rect = card.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width - 0.5;
+  const y = (e.clientY - rect.top) / rect.height - 0.5;
+  card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
+}
+   
+  onMouseLeave(e: MouseEvent): void {
+  (e.currentTarget as HTMLElement).style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
+}
+
   ingresar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+
+    
 
     this.cargando = true;
 
@@ -66,3 +81,4 @@ export class LoginComponent {
     });
   }
 }
+

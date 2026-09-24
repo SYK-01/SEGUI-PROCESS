@@ -169,7 +169,8 @@
 
       <mat-form-field appearance="outline" class="full">
         <mat-label>Sistema</mat-label>
-        <mat-select [(ngModel)]="editing.Cod_Sistema">
+        <mat-select [(ngModel)]="editing.Cod_Sistema" required>
+
           @for (s of sistemas; track s.Cod_Sistema) {
             <mat-option [value]="s.Cod_Sistema">{{ s.Nom_Sistema }}</mat-option>
           }
@@ -179,7 +180,8 @@
       <div class="row2">
         <mat-form-field appearance="outline" class="full">
           <mat-label>Tipo</mat-label>
-          <mat-select [(ngModel)]="editing.Tipo">
+      
+            <mat-select [(ngModel)]="editing.Tipo" required>
             @for (t of tipos; track t) {
               <mat-option [value]="t">{{ t }}</mat-option>
             }
@@ -188,7 +190,8 @@
 
         <mat-form-field appearance="outline" class="full">
           <mat-label>Prioridad</mat-label>
-          <mat-select [(ngModel)]="editing.Prioridad">
+          
+            <mat-select [(ngModel)]="editing.Prioridad" required>
             @for (p of prioridades; track p) {
               <mat-option [value]="p">{{ p }}</mat-option>
             }
@@ -198,7 +201,8 @@
 
       <mat-form-field appearance="outline" class="full">
         <mat-label>Título</mat-label>
-        <input matInput [(ngModel)]="editing.Titulo" placeholder="Descripción breve del ticket">
+  
+        <input matInput [(ngModel)]="editing.Titulo" placeholder="Descripción breve del ticket" required id="input-titulo">
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full">
@@ -244,7 +248,8 @@
 
     <mat-form-field appearance="outline" class="full" [class.warn-field]="focoFechaFin && !editing.Fecha_Real_Final">
       <mat-label>Fecha fin</mat-label>
-      <input matInput [matDatepicker]="pickerFin" [(ngModel)]="editing.Fecha_Real_Final">
+  
+      <input matInput [matDatepicker]="pickerFin" [(ngModel)]="editing.Fecha_Real_Final" id="input-fecha-fin">
       <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
       <mat-datepicker #pickerFin></mat-datepicker>
       @if (focoFechaFin && !editing.Fecha_Real_Final) {
